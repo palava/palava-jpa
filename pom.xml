@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<name>Palava Persistence Services</name>
+    <name>Palava Persistence Services</name>
   <parent>
     <artifactId>palava-parent</artifactId>
     <groupId>de.cosmocode.palava</groupId>
@@ -10,18 +10,18 @@
   <groupId>de.cosmocode.palava.services</groupId>
   <artifactId>palava-persistence</artifactId>
   <dependencies>
-  	<dependency>
-  		<groupId>de.cosmocode.palava</groupId>
-  		<artifactId>palava-core</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>javax.persistence</groupId>
-  		<artifactId>persistence-api</artifactId>
-  		<version>1.0</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>commons-validator</groupId>
-  		<artifactId>commons-validator</artifactId>
-  	</dependency>
+      <dependency>
+          <groupId>de.cosmocode.palava</groupId>
+          <artifactId>palava-core</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>javax.persistence</groupId>
+          <artifactId>persistence-api</artifactId>
+          <version>1.0</version>
+      </dependency>
+      <dependency>
+          <groupId>commons-validator</groupId>
+          <artifactId>commons-validator</artifactId>
+      </dependency>
   </dependencies>
 </project>
