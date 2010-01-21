@@ -17,26 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package de.cosmocode.palava.services.persistence;
+package de.cosmocode.palava.model.base;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+public interface Copyable<T> {
 
-import com.google.inject.Provider;
-
-import de.cosmocode.palava.core.scope.Destroyable;
-import de.cosmocode.palava.core.service.Service;
-
-/**
- * A {@link Service} adaption of the {@link EntityManagerFactory} interface.
- * 
- * <p>
- *   <strong>Note</strong>: the created {@link EntityManager} instances should be decorated
- *   as {@link Destroyable}s.
- * </p>
- *
- * @author Willi Schoenborn
- */
-public interface PersistenceService extends EntityManagerFactory, Service, Provider<EntityManager> {
+    T copy();
     
 }

@@ -36,6 +36,8 @@ import de.cosmocode.palava.core.service.lifecycle.Disposable;
 
 /**
  * Default implementation of the {@link PersistenceService} interface.
+ * 
+ * TODO consider using Map-configuration
  *
  * @author Willi Schoenborn
  */
