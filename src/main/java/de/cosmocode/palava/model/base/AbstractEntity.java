@@ -23,16 +23,19 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
+
+import de.cosmocode.json.JSONRenderer;
 
 /**
  * Abstract base implementation of the {@link EntityBase} interface.
  * 
- * TODO empty checks for strings (to null)
- * TODO validation checks for emails, websites
+ * TODO document: equals/hashCode, mappedsuperclass, toString
  * 
  * @author Willi Schoenborn
  */
+@MappedSuperclass
 public abstract class AbstractEntity implements EntityBase {
 
     @Id
@@ -130,6 +133,16 @@ public abstract class AbstractEntity implements EntityBase {
         return true;
     }
 
+    @Override
+    public JSONRenderer renderAsMap(JSONRenderer renderer) {
+        return renderer.
+            key("id").value(getId()).
+            key("createdAt").value(getCreatedAt()).
+            key("modifiedAt").value(getModifiedAt()).
+            key("deletedAt").value(getDeletedAt()).
+            key("isDeleted").value(isDeleted());
+    }
+    
     @Override
     public String toString() {
         return String.format("%s [id=%s, version=%s]", getClass().getSimpleName(), getId(), version);

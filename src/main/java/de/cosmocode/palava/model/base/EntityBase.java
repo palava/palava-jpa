@@ -21,13 +21,42 @@ package de.cosmocode.palava.model.base;
 
 import java.util.Date;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Ordering;
+
+import de.cosmocode.json.JSONMapable;
+
 /**
  * 
  *
  * @author Willi Schoenborn
  */
-public interface EntityBase {
-
+public interface EntityBase extends JSONMapable {
+    
+    /**
+     * Allows ordering by age, which will move the oldest entities to the top.
+     */
+    Ordering<EntityBase> ORDER_BY_AGE = Ordering.natural().onResultOf(new Function<EntityBase, Date>() {
+        
+        @Override
+        public Date apply(EntityBase from) {
+            return from.getCreatedAt();
+        }
+    
+    }).nullsLast();
+    
+    /**
+     * Allows ordering by age, which will move the recently modified entities to the top.
+     */
+    Ordering<EntityBase> ORDER_BY_MODIFICATION = Ordering.natural().onResultOf(new Function<EntityBase, Date>() {
+        
+        @Override
+        public Date apply(EntityBase from) {
+            return from.getModifiedAt();
+        }
+        
+    }).reverse().nullsLast();
+    
     long getId();
     
     Date getCreatedAt();

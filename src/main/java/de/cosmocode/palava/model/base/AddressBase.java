@@ -19,12 +19,14 @@
 
 package de.cosmocode.palava.model.base;
 
+import de.cosmocode.json.JSONMapable;
+
 /**
- *
+ * TODO consider localizing street + streetNumber
  *
  * @author Willi Schoenborn
  */
-public interface AddressBase {
+public interface AddressBase extends JSONMapable {
 
     String getStreet();
     
@@ -56,6 +58,11 @@ public interface AddressBase {
     
     String getCountryCode();
     
+    /**
+     * document toUpperCase
+     * 
+     * @param countryCode
+     */
     void setCountryCode(String countryCode);
     
     /**

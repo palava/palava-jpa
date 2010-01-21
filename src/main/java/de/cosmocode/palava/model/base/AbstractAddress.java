@@ -23,8 +23,13 @@ import javax.persistence.Column;
 
 import com.google.common.base.Preconditions;
 
+import de.cosmocode.commons.TrimMode;
+import de.cosmocode.json.JSONRenderer;
+
 /**
  * Abstract base implementation of the {@link AddressBase} interface.
+ * 
+ * TODO renderAsMap
  *
  * @author Willi Schoenborn
  */
@@ -71,7 +76,7 @@ public abstract class AbstractAddress implements AddressBase {
     
     @Override
     public void setStreet(String street) {
-        this.street = street;
+        this.street = TrimMode.NULL.apply(street);
     }
     
     @Override
@@ -81,7 +86,7 @@ public abstract class AbstractAddress implements AddressBase {
     
     @Override
     public void setStreetNumber(String streetNumber) {
-        this.streetNumber = streetNumber;
+        this.streetNumber = TrimMode.NULL.apply(streetNumber);
     }
     
     @Override
@@ -91,7 +96,7 @@ public abstract class AbstractAddress implements AddressBase {
     
     @Override
     public void setAdditional(String additional) {
-        this.additional = additional;
+        this.additional = TrimMode.NULL.apply(additional);
     }
     
     @Override
@@ -101,7 +106,7 @@ public abstract class AbstractAddress implements AddressBase {
     
     @Override
     public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
+        this.postalCode = TrimMode.NULL.apply(postalCode);
     }
     
     @Override
@@ -111,7 +116,7 @@ public abstract class AbstractAddress implements AddressBase {
     
     @Override
     public void setDistrict(String district) {
-        this.district = district;
+        this.district = TrimMode.NULL.apply(district);
     }
     
     @Override
@@ -121,7 +126,7 @@ public abstract class AbstractAddress implements AddressBase {
     
     @Override
     public void setCity(String city) {
-        this.city = city;
+        this.city = TrimMode.NULL.apply(city);
     }
     
     @Override
@@ -131,7 +136,7 @@ public abstract class AbstractAddress implements AddressBase {
     
     @Override
     public void setState(String state) {
-        this.state = state;
+        this.state = TrimMode.NULL.apply(state);
     }
     
     @Override
@@ -141,7 +146,9 @@ public abstract class AbstractAddress implements AddressBase {
     
     @Override
     public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
+        this.countryCode = TrimMode.NULL.apply(countryCode);
+        if (this.countryCode == null) return;
+        this.countryCode = this.countryCode.toUpperCase();
     }
     
     @Override
@@ -154,7 +161,7 @@ public abstract class AbstractAddress implements AddressBase {
      *
      * @author Willi Schoenborn
      */
-    private class InternalLocation implements LocationBase {
+    private final class InternalLocation extends AbstractLocation {
         
         @Override
         public Double getLatitude() {
@@ -197,7 +204,7 @@ public abstract class AbstractAddress implements AddressBase {
 
     @Override
     public void setPhone(String phone) {
-        this.phone = phone;
+        this.phone = TrimMode.NULL.apply(phone);
     }
     
     @Override
@@ -207,7 +214,7 @@ public abstract class AbstractAddress implements AddressBase {
     
     @Override
     public void setMobilePhone(String mobilePhone) {
-        this.mobilePhone = mobilePhone;
+        this.mobilePhone = TrimMode.NULL.apply(mobilePhone);
     }
     
     @Override
@@ -217,7 +224,7 @@ public abstract class AbstractAddress implements AddressBase {
     
     @Override
     public void setFax(String fax) {
-        this.fax = fax;
+        this.fax = TrimMode.NULL.apply(fax);
     }
     
     @Override
@@ -227,7 +234,7 @@ public abstract class AbstractAddress implements AddressBase {
     
     @Override
     public void setEmail(String email) {
-        this.email = email;
+        this.email = TrimMode.NULL.apply(email);
     }
     
     @Override
@@ -237,7 +244,26 @@ public abstract class AbstractAddress implements AddressBase {
     
     @Override
     public void setWebsite(String website) {
-        this.website = website;
+        this.website = TrimMode.NULL.apply(website);
+    }
+    
+    @Override
+    public JSONRenderer renderAsMap(JSONRenderer renderer) {
+        return renderer.
+            key("street").value(getStreet()).
+            key("streetNumber").value(getStreetNumber()).
+            key("additional").value(getAdditional()).
+            key("postalCode").value(getPostalCode()).
+            key("district").value(getDistrict()).
+            key("city").value(getCity()).
+            key("state").value(getState()).
+            key("countryCode").value(getCountryCode()).
+            key("location").object(getLocation()).
+            key("phone").value(getPhone()).
+            key("mobilePhone").value(getMobilePhone()).
+            key("fax").value(getFax()).
+            key("email").value(getEmail()).
+            key("website").value(getWebsite());
     }
 
 }

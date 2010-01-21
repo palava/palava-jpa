@@ -19,12 +19,14 @@
 
 package de.cosmocode.palava.model.base;
 
+import de.cosmocode.json.JSONMapable;
+
 /**
  * TODO validate values
  *
  * @author Willi Schoenborn
  */
-public interface LocationBase {
+public interface LocationBase extends JSONMapable {
     
     Double getLatitude();
     
