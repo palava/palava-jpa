@@ -26,6 +26,7 @@ import javax.persistence.Query;
 
 import de.cosmocode.palava.model.base.Copyable;
 import de.cosmocode.palava.model.base.EntityBase;
+import de.cosmocode.palava.model.base.ReadOnly;
 
 public abstract class AbstractEntityService<T extends EntityBase> implements EntityService<T> {
 
@@ -35,6 +36,10 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
     
     @Override
     public T create(T entity) {
+        if (entity.getClass().isAnnotationPresent(ReadOnly.class)) {
+            final String message = String.format("%s is annotated as read-only", entity);
+            throw new IllegalArgumentException(message);
+        }
         entity.setCreated();
         getEntityManager().persist(entity);
         return entity;
@@ -74,6 +79,10 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
 
     @Override
     public T update(T entity) {
+        if (entity.getClass().isAnnotationPresent(ReadOnly.class)) {
+            final String message = String.format("%s is annotated as read-only", entity);
+            throw new IllegalArgumentException(message);
+        }
         entity.setModified();
         return entity;
     }
