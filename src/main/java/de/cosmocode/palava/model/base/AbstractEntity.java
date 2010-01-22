@@ -24,6 +24,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Version;
 
 import de.cosmocode.json.JSONRenderer;
@@ -67,7 +69,9 @@ public abstract class AbstractEntity implements EntityBase {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+    
     @Override
+    @PrePersist
     public void setCreated() {
         setCreatedAt(new Date());
     }
@@ -83,6 +87,7 @@ public abstract class AbstractEntity implements EntityBase {
     }
     
     @Override
+    @PreUpdate
     public void setModified() {
         setModifiedAt(new Date());
     }

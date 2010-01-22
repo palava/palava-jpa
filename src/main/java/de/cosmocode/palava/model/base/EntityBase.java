@@ -36,26 +36,27 @@ public interface EntityBase extends JSONMapable {
     /**
      * Allows ordering by age, which will move the oldest entities to the top.
      */
-    Ordering<EntityBase> ORDER_BY_AGE = Ordering.natural().onResultOf(new Function<EntityBase, Date>() {
+    Ordering<EntityBase> ORDER_BY_AGE = Ordering.natural().nullsLast().onResultOf(new Function<EntityBase, Date>() {
         
         @Override
         public Date apply(EntityBase from) {
             return from.getCreatedAt();
         }
     
-    }).nullsLast();
+    });
     
     /**
-     * Allows ordering by age, which will move the recently modified entities to the top.
+     * Allows ordering by last modification, which will move the recently modified entities to the top.
      */
-    Ordering<EntityBase> ORDER_BY_MODIFICATION = Ordering.natural().onResultOf(new Function<EntityBase, Date>() {
+    Ordering<EntityBase> ORDER_BY_MODIFICATION = Ordering.natural().reverse().nullsLast().onResultOf(
+        new Function<EntityBase, Date>() {
         
-        @Override
-        public Date apply(EntityBase from) {
-            return from.getModifiedAt();
-        }
-        
-    }).nullsLast().reverse();
+            @Override
+            public Date apply(EntityBase from) {
+                return from.getModifiedAt();
+            }
+            
+        });
     
     long getId();
     
