@@ -35,6 +35,7 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
     
     @Override
     public T create(T entity) {
+        entity.setCreated();
         getEntityManager().persist(entity);
         return entity;
     }
@@ -73,13 +74,8 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
 
     @Override
     public T update(T entity) {
-        // TODO can we do anything?
+        entity.setModified();
         return entity;
-    }
-
-    @Override
-    public void delete(T entity) {
-        getEntityManager().remove(entity);
     }
 
     @Override

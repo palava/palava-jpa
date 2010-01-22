@@ -55,7 +55,7 @@ public interface EntityBase extends JSONMapable {
             return from.getModifiedAt();
         }
         
-    }).reverse().nullsLast();
+    }).nullsLast().reverse();
     
     long getId();
     
