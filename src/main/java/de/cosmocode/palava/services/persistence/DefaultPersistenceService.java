@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import com.google.inject.servlet.RequestScoped;
 
 import de.cosmocode.palava.core.service.lifecycle.Disposable;
 
@@ -55,6 +56,7 @@ final class DefaultPersistenceService implements PersistenceService, Disposable 
     }
     
     @Override
+    @RequestScoped
     public EntityManager get() {
         return createEntityManager();
     }

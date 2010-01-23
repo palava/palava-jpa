@@ -24,6 +24,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.cosmocode.palava.model.base.Copyable;
 import de.cosmocode.palava.model.base.EntityBase;
 
@@ -36,12 +39,15 @@ import de.cosmocode.palava.model.base.EntityBase;
  */
 public abstract class AbstractEntityService<T extends EntityBase> implements EntityService<T> {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractEntityService.class);
+    
     protected abstract EntityManager getEntityManager();
     
     protected abstract Class<T> getEntityClass();
     
     @Override
     public T create(T entity) {
+        LOG.debug("Creating {} in database", entity);
         getEntityManager().persist(entity);
         return entity;
     }

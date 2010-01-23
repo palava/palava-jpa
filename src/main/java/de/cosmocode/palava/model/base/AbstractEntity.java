@@ -33,7 +33,11 @@ import de.cosmocode.json.JSONRenderer;
 /**
  * Abstract base implementation of the {@link EntityBase} interface.
  * 
- * TODO document: equals/hashCode, mappedsuperclass, toString
+ * TODO document:
+ *  - equals/hashCode
+ *  - mappedsuperclass
+ *  - toString
+ *  - PrePersist/PreUpdate
  * 
  * @author Willi Schoenborn
  */
