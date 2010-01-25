@@ -29,6 +29,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Version;
 
 import de.cosmocode.json.JSONRenderer;
+import de.cosmocode.json.RenderLevel;
 
 /**
  * Abstract base implementation of the {@link EntityBase} interface.
@@ -144,12 +145,18 @@ public abstract class AbstractEntity implements EntityBase {
 
     @Override
     public JSONRenderer renderAsMap(JSONRenderer renderer) {
-        return renderer.
-            key("id").value(getId()).
-            key("createdAt").value(getCreatedAt()).
-            key("modifiedAt").value(getModifiedAt()).
-            key("deletedAt").value(getDeletedAt()).
-            key("isDeleted").value(isDeleted());
+        if (renderer.ge(RenderLevel.TINY)) {
+            renderer.
+                key("id").value(getId());
+        }
+        if (renderer.ge(RenderLevel.MEDIUM)) {
+            renderer.
+                key("createdAt").value(getCreatedAt()).
+                key("modifiedAt").value(getModifiedAt()).
+                key("deletedAt").value(getDeletedAt()).
+                key("isDeleted").value(isDeleted());
+        }
+        return renderer;
     }
     
     @Override
