@@ -33,7 +33,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.inject.servlet.RequestScoped;
 
-import de.cosmocode.palava.core.lifecycle.Disposable;
+import de.cosmocode.palava.core.framework.lifecycle.Disposable;
 
 /**
  * Default implementation of the {@link PersistenceService} interface.

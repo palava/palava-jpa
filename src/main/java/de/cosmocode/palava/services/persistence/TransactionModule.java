@@ -19,9 +19,9 @@
 
 package de.cosmocode.palava.services.persistence;
 
-import de.cosmocode.palava.core.call.filter.definition.Matchers;
-import de.cosmocode.palava.core.command.Command;
-import de.cosmocode.palava.core.inject.PalavaModule;
+import de.cosmocode.palava.core.bridge.call.filter.definition.Matchers;
+import de.cosmocode.palava.core.bridge.command.Command;
+import de.cosmocode.palava.core.inject.AbstractApplication;
 
 /**
  * Binds the default implementation of the {@link TransactionFilter} class
@@ -29,7 +29,7 @@ import de.cosmocode.palava.core.inject.PalavaModule;
  *
  * @author Willi Schoenborn
  */
-public final class TransactionModule extends PalavaModule {
+public final class TransactionModule extends AbstractApplication {
 
     @Override
     protected void configureApplication() {

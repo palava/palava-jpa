@@ -24,8 +24,8 @@ import javax.persistence.EntityManagerFactory;
 
 import com.google.inject.Provider;
 
-import de.cosmocode.palava.core.Service;
-import de.cosmocode.palava.core.scope.Destroyable;
+import de.cosmocode.palava.core.bridge.scope.Destroyable;
+import de.cosmocode.palava.core.framework.Service;
 
 /**
  * A {@link Service} adaption of the {@link EntityManagerFactory} interface.

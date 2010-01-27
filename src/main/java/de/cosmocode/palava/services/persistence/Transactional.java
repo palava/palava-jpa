@@ -24,7 +24,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import de.cosmocode.palava.core.command.Command;
+import de.cosmocode.palava.core.bridge.command.Command;
 
 /**
  * Allows {@link Command} to enable a transaction context.

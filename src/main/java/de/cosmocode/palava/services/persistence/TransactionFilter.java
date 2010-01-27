@@ -26,12 +26,12 @@ import javax.persistence.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.cosmocode.palava.core.call.Call;
-import de.cosmocode.palava.core.call.filter.Filter;
-import de.cosmocode.palava.core.call.filter.FilterChain;
-import de.cosmocode.palava.core.call.filter.FilterException;
-import de.cosmocode.palava.core.command.Commands;
-import de.cosmocode.palava.core.protocol.content.Content;
+import de.cosmocode.palava.core.bridge.call.Call;
+import de.cosmocode.palava.core.bridge.call.filter.Filter;
+import de.cosmocode.palava.core.bridge.call.filter.FilterChain;
+import de.cosmocode.palava.core.bridge.call.filter.FilterException;
+import de.cosmocode.palava.core.bridge.command.Commands;
+import de.cosmocode.palava.core.bridge.simple.content.Content;
 
 /**
  * A {@link Filter} which handles transaction management for
