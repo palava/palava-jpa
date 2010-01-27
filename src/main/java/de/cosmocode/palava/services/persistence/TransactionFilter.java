@@ -1,6 +1,6 @@
 /**
  * palava - a java-php-bridge
- * Copyright (C) 2007  CosmoCode GmbH
+ * Copyright (C) 2007-2010  CosmoCode GmbH
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,12 +26,12 @@ import javax.persistence.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.cosmocode.palava.core.bridge.call.Call;
-import de.cosmocode.palava.core.bridge.call.filter.Filter;
-import de.cosmocode.palava.core.bridge.call.filter.FilterChain;
-import de.cosmocode.palava.core.bridge.call.filter.FilterException;
-import de.cosmocode.palava.core.bridge.command.Commands;
-import de.cosmocode.palava.core.bridge.simple.content.Content;
+import de.cosmocode.palava.bridge.Content;
+import de.cosmocode.palava.bridge.call.Call;
+import de.cosmocode.palava.bridge.call.filter.Filter;
+import de.cosmocode.palava.bridge.call.filter.FilterChain;
+import de.cosmocode.palava.bridge.call.filter.FilterException;
+import de.cosmocode.palava.bridge.command.Commands;
 
 /**
  * A {@link Filter} which handles transaction management for

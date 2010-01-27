@@ -1,6 +1,6 @@
 /**
  * palava - a java-php-bridge
- * Copyright (C) 2007  CosmoCode GmbH
+ * Copyright (C) 2007-2010  CosmoCode GmbH
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,8 +24,8 @@ import javax.persistence.EntityManagerFactory;
 
 import com.google.inject.Provider;
 
-import de.cosmocode.palava.core.bridge.scope.Destroyable;
-import de.cosmocode.palava.core.framework.Service;
+import de.cosmocode.palava.bridge.scope.Destroyable;
+import de.cosmocode.palava.core.Service;
 
 /**
  * A {@link Service} adaption of the {@link EntityManagerFactory} interface.

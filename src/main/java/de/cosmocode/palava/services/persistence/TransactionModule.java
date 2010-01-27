@@ -1,6 +1,6 @@
 /**
  * palava - a java-php-bridge
- * Copyright (C) 2007  CosmoCode GmbH
+ * Copyright (C) 2007-2010  CosmoCode GmbH
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,9 +19,9 @@
 
 package de.cosmocode.palava.services.persistence;
 
-import de.cosmocode.palava.core.bridge.call.filter.definition.Matchers;
-import de.cosmocode.palava.core.bridge.command.Command;
-import de.cosmocode.palava.core.inject.AbstractApplication;
+import de.cosmocode.palava.bridge.call.filter.definition.Matchers;
+import de.cosmocode.palava.bridge.command.Command;
+import de.cosmocode.palava.bridge.inject.AbstractApplication;
 
 /**
  * Binds the default implementation of the {@link TransactionFilter} class
