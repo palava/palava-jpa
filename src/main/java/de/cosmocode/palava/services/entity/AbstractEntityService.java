@@ -103,7 +103,7 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
 
     @Override
     public <P> P projection(String queryName, Object... parameters) {
-        return projection(getEntityManager().createNamedQuery(queryName), parameters);
+        return this.<P>projection(getEntityManager().createNamedQuery(queryName), parameters);
     }
 
     @Override
@@ -114,7 +114,7 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
     
     @Override
     public <P> P[] projections(String queryName, Object... parameters) {
-        return projections(getEntityManager().createNamedQuery(queryName), parameters);
+        return this.<P>projections(getEntityManager().createNamedQuery(queryName), parameters);
     }
     
     @Override
