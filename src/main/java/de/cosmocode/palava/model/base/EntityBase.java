@@ -32,6 +32,18 @@ import de.cosmocode.json.JSONMapable;
  * @author Willi Schoenborn
  */
 public interface EntityBase extends JSONMapable {
+
+    /**
+     * Allows ascending ordering by id.
+     */
+    Ordering<EntityBase> ORDER_BY_ID = Ordering.natural().nullsLast().onResultOf(new Function<EntityBase, Long>() {
+        
+        @Override
+        public Long apply(EntityBase from) {
+            return from.getId();
+        };
+        
+    });
     
     /**
      * Allows ordering by age, which will move the oldest entities to the top.

@@ -37,6 +37,7 @@ import de.cosmocode.json.RenderLevel;
  * TODO document:
  *  - equals/hashCode
  *  - mappedsuperclass
+ *  - getter non-final
  *  - toString
  *  - PrePersist/PreUpdate
  * 
