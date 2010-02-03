@@ -19,8 +19,22 @@
 
 package de.cosmocode.palava.model.base;
 
+/**
+ * A copyable entity can produce meaningful copies
+ * of itself. The copy being produced should <strong>not</strong>
+ * include the primary identifier to prevent the database
+ * from overwriting the original source entity.
+ *
+ * @author Willi Schoenborn
+ * @param <T> the generic entity type
+ */
 public interface Copyable<T> {
 
+    /**
+     * Produce a copy.
+     * 
+     * @return a copy of this entity
+     */
     T copy();
     
 }

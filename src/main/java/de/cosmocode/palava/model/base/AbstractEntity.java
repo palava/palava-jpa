@@ -34,12 +34,32 @@ import de.cosmocode.json.RenderLevel;
 /**
  * Abstract base implementation of the {@link EntityBase} interface.
  * 
- * TODO document:
- *  - equals/hashCode
- *  - mappedsuperclass
- *  - getter non-final
- *  - toString
- *  - PrePersist/PreUpdate
+ * <p>
+ *  This implementation provides equals/hashCode-methods which
+ *  use the return value of {@link EntityBase#getId()} for equality checks.
+ * </p>
+ * 
+ * <p>
+ *   The {@link AbstractEntity} class is annotated with the {@link MappedSuperclass}
+ *   annotation and serves as a base implementation for all concrete entities.
+ * </p>
+ * 
+ * <p>
+ *   The fields of this implementation are all private to support proper encapsulation.
+ *   All accessor-methods (getter/setter) are non-final an can be overriden by sub-classes.
+ *   The setter-methods in this implementation do not validate or modify the given
+ *   inputs.
+ * </p>
+ * 
+ * <p>
+ *   This implementation provides a meaningful toString-method which includes
+ *   the simple class name, the identifier and the current version.
+ * </p>
+ * 
+ * <p>
+ *   The {@link EntityBase#setCreated()} and {@link EntityBase#setModified()} are annotated
+ *   with the {@link PrePersist}- and {@link PreUpdate}-annotation.
+ * </p>
  * 
  * @author Willi Schoenborn
  */
@@ -160,6 +180,13 @@ public abstract class AbstractEntity implements EntityBase {
         return renderer;
     }
     
+    /**
+     * <p>
+     *   This implementation produces a string containing <strong>the simple class name of this entity,
+     *   it's identifier and the current version</strong>.
+     * </p>
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return String.format("%s [id=%s, version=%s]", getClass().getSimpleName(), getId(), version);

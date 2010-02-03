@@ -23,26 +23,38 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import de.cosmocode.palava.core.Service;
 import de.cosmocode.palava.model.base.Copyable;
 import de.cosmocode.palava.model.base.EntityBase;
 
 /**
- * 
+ * A service which allows crud-operations on entites of a specific type.
  *
  * @author Willi Schoenborn
- * @param <T>
+ * @param <T> the generic entity type
  */
-public interface EntityService<T extends EntityBase> {
+public interface EntityService<T extends EntityBase> extends Service {
 
+    /**
+     * Saves an entity to the database.
+     * 
+     * @param entity the entity being peristed
+     * @return the persisted entity
+     */
     T create(T entity);
     
+    /**
+     * Retrieves an entity from the database.
+     * 
+     * @param identifier the entity's identifier
+     * @return the entity associated with the given identifier
+     *         or null if there is no such entity
+     */
     T read(long identifier);
     
     T read(Query query, Object... parameters);
     
     T read(String queryName, Object... parameters);
-    
-//    T read(CriteriaQuery query);
     
     T reference(long identifier);
     
@@ -50,9 +62,7 @@ public interface EntityService<T extends EntityBase> {
     
     List<T> list(String queryName, Object... parameters);
     
-//    List<T> list(CriteriaQuery query);
-    
-//    List<T> all();
+    List<T> all();
     
     T update(T entity);
     
@@ -64,25 +74,17 @@ public interface EntityService<T extends EntityBase> {
     
     <P> P projection(String queryName, Object... parameters);
     
-//    <P> P projection(CriteriaQuery query);
-    
     <P> P[] projections(Query query, Object... parameters);
     
     <P> P[] projections(String queryName, Object... parameters);
-    
-//    <P> P[] projections(CriteriaQuery query);
     
     <P> List<P> projectionList(Query query, Object... parameters);
     
     <P> List<P> projectionList(String queryName, Object... parameters);
     
-//    <P> List<P> projectionList(CriteriaQuery query);
-    
     <P> List<P[]> projectionsList(Query query, Object... parameters);
     
     <P> List<P[]> projectionsList(String queryName, Object... parameters);
-    
-//    <P> List<P[]> projectionsList(CriteriaQuery query);
     
     Query prepare(String queryName, Object... parameters);
     

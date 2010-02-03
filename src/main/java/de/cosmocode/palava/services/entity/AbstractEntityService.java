@@ -43,7 +43,7 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
     
     protected abstract EntityManager getEntityManager();
     
-    protected abstract Class<T> getEntityClass();
+    protected abstract Class<T> entityClass();
     
     @Override
     public T create(T entity) {
@@ -54,7 +54,7 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
 
     @Override
     public T read(long identifier) {
-        return getEntityManager().find(getEntityClass(), identifier);
+        return getEntityManager().find(entityClass(), identifier);
     }
     
     @Override
@@ -70,7 +70,7 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
     
     @Override
     public T reference(long identifier) {
-        return getEntityManager().getReference(getEntityClass(), identifier);
+        return getEntityManager().getReference(entityClass(), identifier);
     }
     
     @Override
@@ -84,6 +84,12 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
         return list(getEntityManager().createNamedQuery(queryName), parameters);
     }
 
+    @Override
+    public List<T> all() {
+        final String query = String.format("from %s", entityClass().getSimpleName());
+        return list(getEntityManager().createQuery(query));
+    }
+    
     @Override
     public T update(T entity) {
         // what should we do here? flush?
