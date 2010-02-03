@@ -29,7 +29,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
-import com.google.inject.internal.Lists;
+import com.google.common.collect.Lists;
 
 /**
  * Tests {@link EntityBase#ORDER_BY_AGE}.
