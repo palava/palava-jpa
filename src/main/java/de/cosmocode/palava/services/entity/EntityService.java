@@ -21,6 +21,8 @@ package de.cosmocode.palava.services.entity;
 
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
 import de.cosmocode.palava.core.Service;
@@ -52,24 +54,102 @@ public interface EntityService<T extends EntityBase> extends Service {
      */
     T read(long identifier);
     
+    /**
+     * Retrievs an entity from the database.
+     * 
+     * @param query the query being executed
+     * @param parameters the parameters this query needs
+     * @return the single entity found using the given query
+     * @throws EntityNotFoundException if there is no matching entity
+     * @throws NonUniqueResultException if there is more than one matching entity
+     */
     T read(Query query, Object... parameters);
-    
+
+    /**
+     * Retrievs an entity from the database.
+     * 
+     * @param queryName the name of the query being executed
+     * @param parameters the parameters this query needs
+     * @return the single entity found using the given query
+     * @throws EntityNotFoundException if there is no matching entity
+     * @throws NonUniqueResultException if there is more than one matching entity
+     */
     T read(String queryName, Object... parameters);
     
+    /**
+     * Retrieves a reference to an entity without
+     * actually loading it to allow managing relationships
+     * without the need to query every relative.
+     * 
+     * @param identifier the entity's identifer
+     * @return a reference to the entity with the given identifer
+     * @throws EntityNotFoundException if there is no matching entity
+     */
     T reference(long identifier);
-    
+
+    /**
+     * Retrievs a list of entities from the database.
+     * 
+     * @param query the query being executed
+     * @param parameters the parameters this query needs
+     * @return the single entity found using the given query
+     */
     List<T> list(Query query, Object... parameters);
-    
+
+    /**
+     * Retrievs a list of entities from the database.
+     * 
+     * @param queryName the name of the query being executed
+     * @param parameters the parameters this query needs
+     * @return the single entity found using the given query
+     */
     List<T> list(String queryName, Object... parameters);
     
+    /**
+     * Retrievs a list of all entities of the associated type from the database.
+     * 
+     * @return a list of all entites
+     */
     List<T> all();
     
+    /**
+     * Updates an entities state in the database.
+     * 
+     * @param entity the entity being updated
+     * @return the updated entity
+     */
     T update(T entity);
     
+    /**
+     * Deletes an entity.
+     * 
+     * <p>
+     *   <strong>Note</strong>: Implementations are free to decide whether
+     *   entites should be removed from the database or hidden using a custom
+     *   flag.
+     * </p>
+     * 
+     * @param entity the entity being deleted
+     */
     void delete(T entity);
     
+    /**
+     * Creates a copy of the given entity and saves it to the database.
+     * 
+     * @param <C> the generic copyable entity type
+     * @param entity the entity being copied
+     * @return the persisted copy
+     */
     <C extends Copyable<T>> T createCopy(C entity);
     
+    /**
+     * Retrieves a projection, a single column, single row value.
+     * 
+     * @param <P> the generic value type
+     * @param query the query being executed
+     * @param parameters the parameters this query needs
+     * @return the value found by the given query
+     */
     <P> P projection(Query query, Object... parameters);
     
     <P> P projection(String queryName, Object... parameters);

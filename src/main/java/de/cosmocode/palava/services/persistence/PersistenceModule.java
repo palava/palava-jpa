@@ -36,7 +36,6 @@ public final class PersistenceModule implements Module {
     @Override
     public void configure(Binder binder) {
         binder.bind(PersistenceService.class).to(DefaultPersistenceService.class);
-        // TODO make sure we are only using one persistence service!
         binder.bind(EntityManager.class).toProvider(PersistenceService.class);
     }
 

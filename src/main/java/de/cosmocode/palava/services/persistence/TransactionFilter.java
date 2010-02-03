@@ -41,7 +41,7 @@ import de.cosmocode.palava.bridge.command.Commands;
  */
 public abstract class TransactionFilter implements Filter {
 
-    private static final Logger log = LoggerFactory.getLogger(TransactionFilter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TransactionFilter.class);
 
     /**
      * Gets the underlying {@link EntityManager} instance for
@@ -56,7 +56,7 @@ public abstract class TransactionFilter implements Filter {
         final EntityManager manager = getEntityManager();
         final EntityTransaction tx = manager.getTransaction();
         
-        log.debug("Starting transaction");
+        LOG.debug("Starting transaction");
         tx.begin();
         
         final Content content;
@@ -66,11 +66,11 @@ public abstract class TransactionFilter implements Filter {
         /*CHECKSTYLE:OFF*/
         } catch (RuntimeException e) {
         /*CHECKSTYLE:ON*/
-            log.error("Execution failed, rolling back", e);
+            LOG.error("Execution failed, rolling back", e);
             tx.rollback();
             throw e;
         } catch (FilterException e) {
-            log.error("Filtering failed, rolling back", e);
+            LOG.error("Filtering failed, rolling back", e);
             tx.rollback();
             throw e;
         }
@@ -78,10 +78,10 @@ public abstract class TransactionFilter implements Filter {
         try {
             assert tx.isActive() : "Transaction should be active";
             tx.commit();
-            log.debug("Commit succeeded");
+            LOG.debug("Commit succeeded");
             return content;
         } catch (PersistenceException e) {
-            log.error("Commit failed, rolling back", e);
+            LOG.error("Commit failed, rolling back", e);
             final Class<?> type = Commands.getClass(call.getCommand());
             final Transactional annotation = type.getAnnotation(Transactional.class);
             switch (annotation.strategy()) {

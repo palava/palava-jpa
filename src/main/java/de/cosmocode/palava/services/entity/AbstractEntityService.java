@@ -27,12 +27,19 @@ import javax.persistence.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Provider;
+
 import de.cosmocode.palava.model.base.Copyable;
 import de.cosmocode.palava.model.base.EntityBase;
 
 /**
- * TODO document
- *  - delete left to sub classes, cant decide how to delete (at all? set deleted?)
+ * Abstract base implementation of the {@link EntityService} interface.
+ * 
+ * <p>
+ *   <strong>Note</strong>: This implementation does not provide a meaningful
+ *   {@link EntityService#delete(EntityBase)} method. Decisions about deleting
+ *   or hiding entites are left to sub-classes.
+ * </p>
  *
  * @author Willi Schoenborn
  * @param <T>
@@ -41,20 +48,31 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractEntityService.class);
     
-    protected abstract EntityManager getEntityManager();
+    /**
+     * Provides an {@link EntityManager} this implementation uses to do it's
+     * work. Implementations will ususally delegate to an injected {@link Provider}.
+     * 
+     * @return an {@link EntityManager}
+     */
+    protected abstract EntityManager entityManager();
     
+    /**
+     * Provides the class object of this entity type.
+     * 
+     * @return this entity type's class object
+     */
     protected abstract Class<T> entityClass();
     
     @Override
     public T create(T entity) {
         LOG.debug("Creating {} in database", entity);
-        getEntityManager().persist(entity);
+        entityManager().persist(entity);
         return entity;
     }
 
     @Override
     public T read(long identifier) {
-        return getEntityManager().find(entityClass(), identifier);
+        return entityManager().find(entityClass(), identifier);
     }
     
     @Override
@@ -65,12 +83,12 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
     
     @Override
     public T read(String queryName, Object... parameters) {
-        return read(getEntityManager().createNamedQuery(queryName), parameters);
+        return read(entityManager().createNamedQuery(queryName), parameters);
     }
     
     @Override
     public T reference(long identifier) {
-        return getEntityManager().getReference(entityClass(), identifier);
+        return entityManager().getReference(entityClass(), identifier);
     }
     
     @Override
@@ -81,13 +99,13 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
     
     @Override
     public List<T> list(String queryName, Object... parameters) {
-        return list(getEntityManager().createNamedQuery(queryName), parameters);
+        return list(entityManager().createNamedQuery(queryName), parameters);
     }
 
     @Override
     public List<T> all() {
         final String query = String.format("from %s", entityClass().getSimpleName());
-        return list(getEntityManager().createQuery(query));
+        return list(entityManager().createQuery(query));
     }
     
     @Override
@@ -109,7 +127,7 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
 
     @Override
     public <P> P projection(String queryName, Object... parameters) {
-        return this.<P>projection(getEntityManager().createNamedQuery(queryName), parameters);
+        return this.<P>projection(entityManager().createNamedQuery(queryName), parameters);
     }
 
     @Override
@@ -120,7 +138,7 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
     
     @Override
     public <P> P[] projections(String queryName, Object... parameters) {
-        return this.<P>projections(getEntityManager().createNamedQuery(queryName), parameters);
+        return this.<P>projections(entityManager().createNamedQuery(queryName), parameters);
     }
     
     @Override
@@ -131,7 +149,7 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
     
     @Override
     public <P> List<P> projectionList(String queryName, Object... parameters) {
-        return projectionList(getEntityManager().createNamedQuery(queryName), parameters);
+        return projectionList(entityManager().createNamedQuery(queryName), parameters);
     }
     
     @Override
@@ -142,7 +160,7 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
     
     @Override
     public <P> List<P[]> projectionsList(String queryName, Object... parameters) {
-        return projectionsList(getEntityManager().createNamedQuery(queryName), parameters);
+        return projectionsList(entityManager().createNamedQuery(queryName), parameters);
     }
     
     @Override
@@ -155,7 +173,7 @@ public abstract class AbstractEntityService<T extends EntityBase> implements Ent
     
     @Override
     public Query prepare(String queryName, Object... parameters) {
-        return prepare(getEntityManager().createNamedQuery(queryName), parameters);
+        return prepare(entityManager().createNamedQuery(queryName), parameters);
     }
     
 }

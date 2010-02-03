@@ -38,21 +38,19 @@ import de.cosmocode.palava.core.lifecycle.Disposable;
 /**
  * Default implementation of the {@link PersistenceService} interface.
  * 
- * TODO consider using Map-configuration
- *
  * @author Willi Schoenborn
  */
 @Singleton
 final class DefaultPersistenceService implements PersistenceService, Disposable {
 
-    private static final Logger log = LoggerFactory.getLogger(DefaultPersistenceService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultPersistenceService.class);
 
     private final EntityManagerFactory factory;
     
     @Inject
     public DefaultPersistenceService(@Named("persistence.unitName") String unitName) {
         this.factory = Persistence.createEntityManagerFactory(unitName);
-        log.info("Created {}", factory);
+        LOG.info("Created {}", factory);
     }
     
     @Override
@@ -79,7 +77,7 @@ final class DefaultPersistenceService implements PersistenceService, Disposable 
 
     @Override
     public void close() {
-        log.info("Closing {}", factory);
+        LOG.info("Closing {}", factory);
         factory.close();
     }
     
