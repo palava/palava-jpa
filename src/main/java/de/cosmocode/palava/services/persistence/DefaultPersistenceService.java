@@ -40,7 +40,6 @@ import de.cosmocode.palava.core.lifecycle.Disposable;
  * 
  * @author Willi Schoenborn
  */
-@Singleton
 final class DefaultPersistenceService implements PersistenceService, Disposable {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultPersistenceService.class);
