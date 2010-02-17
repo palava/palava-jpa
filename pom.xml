@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <name>Palava Persistence</name>
+    <name>Palava JPA</name>
     <version>2.0-SNAPSHOT</version>
   <parent>
     <artifactId>palava-parent</artifactId>
@@ -7,43 +7,43 @@
     <version>2.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>de.cosmocode.palava.services</groupId>
-  <artifactId>palava-persistence</artifactId>
+  <groupId>de.cosmocode.palava</groupId>
+  <artifactId>palava-jpa</artifactId>
   <scm>
-  	<developerConnection>scm:svn:https://palava.svn.cosmocode.de/palava-persistence/trunk</developerConnection>
+    <developerConnection>scm:svn:https://palava.svn.cosmocode.de/palava-jpa/trunk</developerConnection>
   </scm>
   <dependencies>
       <dependency>
-          <groupId>de.cosmocode.palava</groupId>
-          <artifactId>palava-core</artifactId>
-          <version>2.0-SNAPSHOT</version>
+        <groupId>de.cosmocode.palava</groupId>
+        <artifactId>palava-core</artifactId>
+        <version>2.0-SNAPSHOT</version>
       </dependency>
       <dependency>
-          <groupId>javax.persistence</groupId>
-          <artifactId>persistence-api</artifactId>
-          <version>1.0</version>
+        <groupId>javax.persistence</groupId>
+        <artifactId>persistence-api</artifactId>
+        <version>1.0</version>
       </dependency>
       <dependency>
-          <groupId>commons-validator</groupId>
-          <artifactId>commons-validator</artifactId>
+        <groupId>commons-validator</groupId>
+        <artifactId>commons-validator</artifactId>
       </dependency>
       <dependency>
-      	<groupId>junit</groupId>
-      	<artifactId>junit</artifactId>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
       </dependency>
       <dependency>
-      	<groupId>org.easymock</groupId>
-      	<artifactId>easymock</artifactId>
+        <groupId>org.easymock</groupId>
+        <artifactId>easymock</artifactId>
       </dependency>
       <dependency>
-      	<groupId>de.cosmocode.palava</groupId>
-      	<artifactId>palava-bridge</artifactId>
-      	<version>2.0-SNAPSHOT</version>
+        <groupId>de.cosmocode.palava</groupId>
+        <artifactId>palava-bridge</artifactId>
+        <version>2.0-SNAPSHOT</version>
       </dependency>
       <dependency>
-      	<groupId>com.google.inject.extensions</groupId>
-      	<artifactId>guice-servlet</artifactId>
-      	<version>2.0</version>
+        <groupId>com.google.inject.extensions</groupId>
+        <artifactId>guice-servlet</artifactId>
+        <version>2.0</version>
       </dependency>
   </dependencies>
 </project>
