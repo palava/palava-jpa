@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import de.cosmocode.palava.core.Service;
@@ -42,6 +43,8 @@ public interface EntityService<T extends EntityBase> extends Service {
      * 
      * @param entity the entity being peristed
      * @return the persisted entity
+     * @throws IllegalStateException if underlying entitymanager is closed
+     * @throws PersistenceException if the entity already exist or a transaction is required
      */
     T create(T entity);
     
