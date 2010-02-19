@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package de.cosmocode.palava.services.persistence;
+package de.cosmocode.palava.jpa;
 
 import java.util.Map;
 
@@ -30,9 +30,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import com.google.inject.servlet.RequestScoped;
 
 import de.cosmocode.palava.core.lifecycle.Disposable;
+import de.cosmocode.palava.ipc.IpcConnectionScoped;
 
 /**
  * Default implementation of the {@link PersistenceService} interface.
@@ -52,7 +52,7 @@ final class DefaultPersistenceService implements PersistenceService, Disposable 
     }
     
     @Override
-    @RequestScoped
+    @IpcConnectionScoped
     public EntityManager get() {
         return createEntityManager();
     }

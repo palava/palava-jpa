@@ -17,24 +17,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package de.cosmocode.palava.services.persistence;
+package de.cosmocode.palava.jpa;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
+import com.google.inject.Provider;
+
+import de.cosmocode.palava.core.Service;
+import de.cosmocode.palava.ipc.scopeable.Destroyable;
 
 /**
- * Defines the exception strategy of a transaction defined
- * by {@link Transactional}.
+ * A {@link Service} adaption of the {@link EntityManagerFactory} interface.
+ * 
+ * <p>
+ *   <strong>Note</strong>: the created {@link EntityManager} instances should be decorated
+ *   as {@link Destroyable}s.
+ * </p>
  *
  * @author Willi Schoenborn
  */
-public enum ExceptionStrategy {
-
-    /**
-     * Rollback transaction and rethrow.
-     */
-    ROLLBACK,
-    
-    /**
-     * Log and rethrow, no rollback.
-     */
-    THROW;
+public interface PersistenceService extends EntityManagerFactory, Service, Provider<EntityManager> {
     
 }

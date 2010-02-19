@@ -17,26 +17,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package de.cosmocode.palava.services.persistence;
+package de.cosmocode.palava.jpa;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 
+import com.google.inject.Binder;
+import com.google.inject.Module;
 import com.google.inject.Provider;
 
-import de.cosmocode.palava.bridge.scope.Destroyable;
-import de.cosmocode.palava.core.Service;
-
 /**
- * A {@link Service} adaption of the {@link EntityManagerFactory} interface.
- * 
- * <p>
- *   <strong>Note</strong>: the created {@link EntityManager} instances should be decorated
- *   as {@link Destroyable}s.
- * </p>
+ * {@link Module} which binds the {@link PersistenceService} interface
+ * to its default implementation and registers as a {@link Provider} for {@link EntityManager}s.
  *
  * @author Willi Schoenborn
  */
-public interface PersistenceService extends EntityManagerFactory, Service, Provider<EntityManager> {
-    
+public final class PersistenceModule implements Module {
+
+    @Override
+    public void configure(Binder binder) {
+        binder.bind(PersistenceService.class).to(DefaultPersistenceService.class);
+        binder.bind(EntityManager.class).toProvider(PersistenceService.class);
+    }
+
 }

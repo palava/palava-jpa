@@ -17,26 +17,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package de.cosmocode.palava.services.persistence;
-
-import javax.persistence.EntityManager;
-
-import com.google.inject.Binder;
-import com.google.inject.Module;
-import com.google.inject.Provider;
+package de.cosmocode.palava.jpa;
 
 /**
- * {@link Module} which binds the {@link PersistenceService} interface
- * to its default implementation and registers as a {@link Provider} for {@link EntityManager}s.
+ * Defines the exception strategy of a transaction defined
+ * by {@link Transactional}.
  *
  * @author Willi Schoenborn
  */
-public final class PersistenceModule implements Module {
+public enum ExceptionStrategy {
 
-    @Override
-    public void configure(Binder binder) {
-        binder.bind(PersistenceService.class).to(DefaultPersistenceService.class);
-        binder.bind(EntityManager.class).toProvider(PersistenceService.class);
-    }
-
+    /**
+     * Rollback transaction and rethrow.
+     */
+    ROLLBACK,
+    
+    /**
+     * Log and rethrow, no rollback.
+     */
+    THROW;
+    
 }

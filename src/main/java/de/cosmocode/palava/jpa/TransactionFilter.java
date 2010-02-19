@@ -17,7 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package de.cosmocode.palava.services.persistence;
+package de.cosmocode.palava.jpa;
+
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -26,12 +28,11 @@ import javax.persistence.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.cosmocode.palava.bridge.Content;
-import de.cosmocode.palava.bridge.call.Call;
-import de.cosmocode.palava.bridge.call.filter.Filter;
-import de.cosmocode.palava.bridge.call.filter.FilterChain;
-import de.cosmocode.palava.bridge.call.filter.FilterException;
-import de.cosmocode.palava.bridge.command.Commands;
+import de.cosmocode.palava.ipc.IpcCall;
+import de.cosmocode.palava.ipc.IpcCallFilter;
+import de.cosmocode.palava.ipc.IpcCallFilterChain;
+import de.cosmocode.palava.ipc.IpcCommand;
+import de.cosmocode.palava.ipc.IpcCommandExecutionException;
 
 /**
  * A {@link Filter} which handles transaction management for
@@ -39,7 +40,7 @@ import de.cosmocode.palava.bridge.command.Commands;
  *
  * @author Willi Schoenborn
  */
-public abstract class TransactionFilter implements Filter {
+public abstract class TransactionFilter implements IpcCallFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransactionFilter.class);
 
@@ -52,24 +53,25 @@ public abstract class TransactionFilter implements Filter {
     protected abstract EntityManager getEntityManager();
     
     @Override
-    public Content filter(Call call, FilterChain chain) throws FilterException {
+    public Map<String, Object> filter(IpcCall call, IpcCommand command, IpcCallFilterChain chain)
+        throws IpcCommandExecutionException {
         final EntityManager manager = getEntityManager();
         final EntityTransaction tx = manager.getTransaction();
         
         LOG.debug("Starting transaction");
         tx.begin();
         
-        final Content content;
+        final Map<String, Object> result;
         
         try {
-            content = chain.filter(call);
+            result = chain.filter(call, command);
         /*CHECKSTYLE:OFF*/
         } catch (RuntimeException e) {
         /*CHECKSTYLE:ON*/
             LOG.error("Execution failed, rolling back", e);
             tx.rollback();
             throw e;
-        } catch (FilterException e) {
+        } catch (IpcCommandExecutionException e) {
             LOG.error("Filtering failed, rolling back", e);
             tx.rollback();
             throw e;
@@ -79,10 +81,10 @@ public abstract class TransactionFilter implements Filter {
             assert tx.isActive() : "Transaction should be active";
             tx.commit();
             LOG.debug("Commit succeeded");
-            return content;
+            return result;
         } catch (PersistenceException e) {
             LOG.error("Commit failed, rolling back", e);
-            final Class<?> type = Commands.getClass(call.getCommand());
+            final Class<? extends IpcCommand> type = command.getClass();
             final Transactional annotation = type.getAnnotation(Transactional.class);
             switch (annotation.strategy()) {
                 case ROLLBACK: {

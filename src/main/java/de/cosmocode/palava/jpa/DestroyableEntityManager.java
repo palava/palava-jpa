@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package de.cosmocode.palava.services.persistence;
+package de.cosmocode.palava.jpa;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -27,7 +27,7 @@ import javax.persistence.Query;
 
 import com.google.common.base.Preconditions;
 
-import de.cosmocode.palava.bridge.scope.Destroyable;
+import de.cosmocode.palava.ipc.scopeable.Destroyable;
 import de.cosmocode.patterns.Decorator;
 
 /**

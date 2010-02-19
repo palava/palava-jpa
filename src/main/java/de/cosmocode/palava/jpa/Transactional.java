@@ -17,23 +17,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package de.cosmocode.palava.services.persistence;
+package de.cosmocode.palava.jpa;
 
-import de.cosmocode.palava.bridge.call.filter.definition.Matchers;
-import de.cosmocode.palava.bridge.command.Command;
-import de.cosmocode.palava.bridge.inject.AbstractApplication;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import de.cosmocode.palava.ipc.IpcCommand;
 
 /**
- * Binds the default implementation of the {@link TransactionFilter} class
- * to all {@linkplain Command commands} annotated with {@link Transactional}.
+ * Allows {@link IpcCommand}s to enable a transaction context.
  *
  * @author Willi Schoenborn
  */
-public final class TransactionModule extends AbstractApplication {
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Transactional {
 
-    @Override
-    protected void configureApplication() {
-        filter(Matchers.annotatedWith(Transactional.class)).through(DefaultTransactionFilter.class);
-    }
-
+    ExceptionStrategy strategy() default ExceptionStrategy.ROLLBACK;
+    
 }
