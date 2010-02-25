@@ -35,7 +35,7 @@ import de.cosmocode.palava.ipc.IpcCommand;
 import de.cosmocode.palava.ipc.IpcCommandExecutionException;
 
 /**
- * A {@link Filter} which handles transaction management for
+ * An {@link IpcCallFilter} which handles transaction management for
  * specific jobs.
  *
  * @author Willi Schoenborn
