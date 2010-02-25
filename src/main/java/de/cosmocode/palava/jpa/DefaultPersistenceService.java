@@ -66,10 +66,10 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
     @Override
     public void initialize() throws LifecycleException {
         if (properties == null) {
-            LOG.info("Creatintg entity manager factory");
+            LOG.info("Creating entity manager factory");
             this.factory = Persistence.createEntityManagerFactory(unitName);
         } else {
-            LOG.info("Creatintg entity manager factory using {}", properties);
+            LOG.info("Creating entity manager factory using {}", properties);
             this.factory = Persistence.createEntityManagerFactory(unitName, properties);
         }
     }
