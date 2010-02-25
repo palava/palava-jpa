@@ -54,12 +54,12 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
     private Properties properties;
     
     @Inject
-    public DefaultPersistenceService(@Named("persistence.unitName") String unitName) {
+    public DefaultPersistenceService(@Named(PersistenceConfig.UNIT_NAME) String unitName) {
         this.unitName = Preconditions.checkNotNull(unitName, "UnitName");
     }
     
     @Inject(optional = true)
-    void setProperties(@Named("persistence.properties") Properties properties) {
+    void setProperties(@Named(PersistenceConfig.PROPERTIES) Properties properties) {
         this.properties = Preconditions.checkNotNull(properties, "Properties");
     }
     
