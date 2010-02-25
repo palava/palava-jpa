@@ -20,6 +20,7 @@
 package de.cosmocode.palava.jpa;
 
 import java.util.Map;
+import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -28,10 +29,13 @@ import javax.persistence.Persistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import de.cosmocode.palava.core.lifecycle.Disposable;
+import de.cosmocode.palava.core.lifecycle.Initializable;
+import de.cosmocode.palava.core.lifecycle.LifecycleException;
 import de.cosmocode.palava.ipc.IpcConnectionScoped;
 
 /**
@@ -39,16 +43,35 @@ import de.cosmocode.palava.ipc.IpcConnectionScoped;
  * 
  * @author Willi Schoenborn
  */
-final class DefaultPersistenceService implements PersistenceService, Disposable {
+final class DefaultPersistenceService implements PersistenceService, Initializable, Disposable {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultPersistenceService.class);
+    
+    private final String unitName;
 
-    private final EntityManagerFactory factory;
+    private EntityManagerFactory factory;
+    
+    private Properties properties;
     
     @Inject
     public DefaultPersistenceService(@Named("persistence.unitName") String unitName) {
-        this.factory = Persistence.createEntityManagerFactory(unitName);
-        LOG.info("Created {}", factory);
+        this.unitName = Preconditions.checkNotNull(unitName, "UnitName");
+    }
+    
+    @Inject(optional = true)
+    void setProperties(@Named("persistence.properties") Properties properties) {
+        this.properties = Preconditions.checkNotNull(properties, "Properties");
+    }
+    
+    @Override
+    public void initialize() throws LifecycleException {
+        if (properties == null) {
+            LOG.info("Creatintg entity manager factory");
+            this.factory = Persistence.createEntityManagerFactory(unitName);
+        } else {
+            LOG.info("Creatintg entity manager factory using {}", properties);
+            this.factory = Persistence.createEntityManagerFactory(unitName, properties);
+        }
     }
     
     @Override
