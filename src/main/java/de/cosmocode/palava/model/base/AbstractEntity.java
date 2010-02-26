@@ -26,6 +26,8 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 import de.cosmocode.json.JSONRenderer;
@@ -73,12 +75,15 @@ public abstract class AbstractEntity implements EntityBase {
     private int version;
 
     @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     
     @Column(name = "modified_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedAt;
     
     @Column(name = "deleted_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date deletedAt;
     
     @Override
