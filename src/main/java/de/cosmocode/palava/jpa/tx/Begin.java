@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
 import de.cosmocode.palava.ipc.IpcCall;
 import de.cosmocode.palava.ipc.IpcCommand;
@@ -24,6 +25,7 @@ import de.cosmocode.palava.ipc.IpcCommand.Throw;
  */
 @Description("Begins a persistence transaction.")
 @Throw(name = IllegalStateException.class, description = "If there is already an active transaction")
+@Singleton
 public final class Begin implements IpcCommand {
 
     private static final Logger LOG = LoggerFactory.getLogger(Begin.class);

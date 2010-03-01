@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
 import de.cosmocode.palava.ipc.IpcCall;
 import de.cosmocode.palava.ipc.IpcCommand;
@@ -29,6 +30,7 @@ import de.cosmocode.palava.ipc.IpcCommand.Throws;
     @Throw(name = IllegalStateException.class, description = "If the current transaction is not active"),
     @Throw(name = RollbackException.class, description = "If commit fails")
 })
+@Singleton
 public final class Commit implements IpcCommand {
 
     private static final Logger LOG = LoggerFactory.getLogger(Commit.class);
