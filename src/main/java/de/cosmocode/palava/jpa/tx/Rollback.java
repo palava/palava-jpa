@@ -24,7 +24,7 @@ import de.cosmocode.palava.ipc.IpcCommand.Throws;
  *
  * @author Willi Schoenborn
  */
-@Description("Rollbacks the current transaction")
+@Description("Rolling back the current transaction")
 @Throws({
     @Throw(name = IllegalStateException.class, description = "If the current transaction is not active"),
     @Throw(name = PersistenceException.class, description = "If rollback failed")
