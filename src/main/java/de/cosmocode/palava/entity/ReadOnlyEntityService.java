@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import de.cosmocode.palava.model.base.EntityBase;
@@ -34,6 +35,15 @@ import de.cosmocode.palava.model.base.EntityBase;
  * @param <T> the generic entity type
  */
 public interface ReadOnlyEntityService<T extends EntityBase> {
+
+    /**
+     * Retrieves an entity from the database.
+     * 
+     * @param identifier the entity's identifier
+     * @return the entity associated with the given identifier
+     *         or null if there is no such entity
+     */
+    T get(long identifier);
     
     /**
      * Retrieves an entity from the database.
@@ -41,6 +51,7 @@ public interface ReadOnlyEntityService<T extends EntityBase> {
      * @param identifier the entity's identifier
      * @return the entity associated with the given identifier
      *         or null if there is no such entity
+     * @throws PersistenceException if there is no entity with the given identifier
      */
     T read(long identifier);
     

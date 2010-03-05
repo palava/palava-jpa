@@ -22,6 +22,7 @@ package de.cosmocode.palava.entity;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import com.google.inject.Provider;
@@ -52,8 +53,18 @@ public abstract class AbstractReadOnlyEntityService<T extends EntityBase> implem
     protected abstract Class<T> entityClass();
 
     @Override
-    public T read(long identifier) {
+    public T get(long identifier) {
         return entityManager().find(entityClass(), identifier);
+    }
+    
+    @Override
+    public T read(long identifier) {
+        final T entity = get(identifier);
+        if (entity == null) {
+            throw new PersistenceException(String.format("No entity found for id #%s", identifier));
+        } else {
+            return entity;
+        }
     }
     
     @Override

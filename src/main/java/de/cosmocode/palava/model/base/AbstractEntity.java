@@ -22,7 +22,6 @@ package de.cosmocode.palava.model.base;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -68,13 +67,10 @@ import de.cosmocode.json.RenderLevel;
 @MappedSuperclass
 public abstract class AbstractEntity implements EntityBase {
 
-    @Id
-    private long id;
-    
     @Version
     private int version;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     
@@ -85,11 +81,6 @@ public abstract class AbstractEntity implements EntityBase {
     @Column(name = "deleted_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedAt;
-    
-    @Override
-    public long getId() {
-        return id;
-    }
     
     @Override
     public Date getCreatedAt() {
