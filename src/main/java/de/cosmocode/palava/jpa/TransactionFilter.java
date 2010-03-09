@@ -28,6 +28,10 @@ import javax.persistence.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
 import de.cosmocode.palava.ipc.IpcCall;
 import de.cosmocode.palava.ipc.IpcCallFilter;
 import de.cosmocode.palava.ipc.IpcCallFilterChain;
@@ -40,22 +44,21 @@ import de.cosmocode.palava.ipc.IpcCommandExecutionException;
  *
  * @author Willi Schoenborn
  */
-public abstract class TransactionFilter implements IpcCallFilter {
+final class TransactionFilter implements IpcCallFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransactionFilter.class);
 
-    /**
-     * Gets the underlying {@link EntityManager} instance for
-     * the transaction.
-     * 
-     * @return an EntityManager
-     */
-    protected abstract EntityManager getEntityManager();
+    private final Provider<EntityManager> provider;
+    
+    @Inject
+    public TransactionFilter(Provider<EntityManager> provider) {
+        this.provider = Preconditions.checkNotNull(provider, "Provider");
+    }
     
     @Override
     public Map<String, Object> filter(IpcCall call, IpcCommand command, IpcCallFilterChain chain)
         throws IpcCommandExecutionException {
-        final EntityManager manager = getEntityManager();
+        final EntityManager manager = provider.get();
         final EntityTransaction tx = manager.getTransaction();
         
         LOG.debug("Starting transaction");
@@ -84,20 +87,8 @@ public abstract class TransactionFilter implements IpcCallFilter {
             return result;
         } catch (PersistenceException e) {
             LOG.error("Commit failed, rolling back", e);
-            final Class<? extends IpcCommand> type = command.getClass();
-            final Transactional annotation = type.getAnnotation(Transactional.class);
-            switch (annotation.strategy()) {
-                case ROLLBACK: {
-                    tx.rollback();
-                    throw e;
-                }
-                case THROW: {
-                    throw e;
-                }
-                default: {
-                    throw new IllegalArgumentException("Unknown strategy " + annotation.strategy());
-                }
-            }
+            tx.rollback();
+            throw e;
         }
     }
 

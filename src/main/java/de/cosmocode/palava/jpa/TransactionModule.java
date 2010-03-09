@@ -23,8 +23,8 @@ import de.cosmocode.palava.ipc.Commands;
 import de.cosmocode.palava.ipc.FilterModule;
 
 /**
- * Binds the default implementation of the {@link TransactionFilter} class
- * to all {@linkplain Command commands} annotated with {@link Transactional}.
+ * Binds the {@link TransactionFilter} class to all {@linkplain Command commands}
+ * annotated with {@link Transactional}.
  *
  * @author Willi Schoenborn
  */
@@ -32,7 +32,7 @@ public final class TransactionModule extends FilterModule {
 
     @Override
     protected void configure() {
-        filter(Commands.annotatedWith(Transactional.class)).through(DefaultTransactionFilter.class);
+        filter(Commands.annotatedWith(Transactional.class)).through(TransactionFilter.class);
     }
 
 }

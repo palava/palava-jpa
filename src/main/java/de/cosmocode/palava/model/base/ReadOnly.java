@@ -29,7 +29,7 @@ import javax.persistence.Entity;
 
 /**
  * Marks an {@link Entity} as read only, therefore disallows
- * any operations which would alter the state of this entity.
+ * any operation which would alter the state of this entity.
  *
  * @author Willi Schoenborn
  */
