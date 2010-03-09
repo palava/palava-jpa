@@ -47,9 +47,8 @@ public final aspect TransactionAspect issingleton() {
     @SuppressAjWarnings("adviceDidNotMatch")
     Object around(): transactional() {
         final IpcConnection connection = currentConnection.get();
-        if (connection == null) return proceed();
         final Key<EntityManager> key = Key.get(EntityManager.class);
-        EntityManager manager = connection.get(key);
+        EntityManager manager = connection == null ? null : EntityManager.class.cast(connection.get(key));
         if (manager == null) {
             manager = currentManager.get();
         }
