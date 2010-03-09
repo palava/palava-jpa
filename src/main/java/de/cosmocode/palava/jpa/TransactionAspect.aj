@@ -12,22 +12,17 @@ import com.google.common.base.Preconditions;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Key;
 import com.google.inject.Provider;
-
-import de.cosmocode.palava.ipc.IpcConnection;
 
 public final aspect TransactionAspect issingleton() {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransactionAspect.class);
 
     private Provider<EntityManager> currentManager;
-    private Provider<IpcConnection> currentConnection;
     
     @Inject
-    public void setProvider(Provider<EntityManager> manager, Provider<IpcConnection> connection) {
+    public void setProvider(Provider<EntityManager> manager) {
         this.currentManager = Preconditions.checkNotNull(manager, "Manager");
-        this.currentConnection = Preconditions.checkNotNull(connection, "Connection");
     }
     
     pointcut createInjector(): call(Injector Guice.createInjector(..));
@@ -46,12 +41,7 @@ public final aspect TransactionAspect issingleton() {
 
     @SuppressAjWarnings("adviceDidNotMatch")
     Object around(): transactional() {
-        final IpcConnection connection = currentConnection.get();
-        final Key<EntityManager> key = Key.get(EntityManager.class);
-        EntityManager manager = connection == null ? null : EntityManager.class.cast(connection.get(key));
-        if (manager == null) {
-            manager = currentManager.get();
-        }
+        final EntityManager manager = currentManager.get();
         final EntityTransaction tx = manager.getTransaction();
         final boolean localTx = !tx.isActive();
         if (localTx) {
