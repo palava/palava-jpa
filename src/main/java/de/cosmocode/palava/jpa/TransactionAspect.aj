@@ -42,7 +42,9 @@ public final aspect TransactionAspect issingleton() {
     @SuppressAjWarnings("adviceDidNotMatch")
     Object around(): transactional() {
         final EntityManager manager = currentManager.get();
+        LOG.trace("Retrieved entitymanager {}", manager);
         final EntityTransaction tx = manager.getTransaction();
+        LOG.trace("Using transaction {}", tx);
         final boolean localTx = !tx.isActive();
         if (localTx) {
             LOG.trace("Beginning automatic transaction");
@@ -62,7 +64,7 @@ public final aspect TransactionAspect issingleton() {
         }
         
         try {
-            if (localTx) {
+            if (localTx && tx.isActive()) {
                 tx.commit();
                 LOG.trace("Committed automatic transaction");
             }
