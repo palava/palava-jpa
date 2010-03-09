@@ -52,7 +52,7 @@ public final class DestroyableEntityManager implements EntityManager, Destroyabl
 
     @Override
     public void close() {
-        manager.close();
+        throw new UnsupportedOperationException();
     }
 
     @Override
