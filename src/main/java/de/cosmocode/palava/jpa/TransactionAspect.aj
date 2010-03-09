@@ -55,7 +55,12 @@ public final aspect TransactionAspect issingleton() {
         }
         final EntityTransaction tx = manager.getTransaction();
         final boolean localTx = !tx.isActive();
-        if (localTx) tx.begin();
+        if (localTx) {
+            LOG.trace("Beginning automatic transaction");
+            tx.begin();
+        } else {
+            LOG.trace("Transaction already active");
+        }
         
         final Object returnValue;
         
@@ -68,7 +73,10 @@ public final aspect TransactionAspect issingleton() {
         }
         
         try {
-            if (localTx) tx.commit();
+            if (localTx) {
+                tx.commit();
+                LOG.trace("Committed automatic transaction");
+            }
             return returnValue;
         } catch (PersistenceException e) {
             LOG.error("Commit in automatic transaction context failed", e);
