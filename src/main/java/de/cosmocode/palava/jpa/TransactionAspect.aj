@@ -9,12 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
-import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Provider;
 
-public final aspect TransactionAspect issingleton() {
+import de.cosmocode.palava.core.aop.AbstractPalavaAspect;
+
+public final aspect TransactionAspect extends AbstractPalavaAspect issingleton() {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransactionAspect.class);
 
@@ -25,18 +25,6 @@ public final aspect TransactionAspect issingleton() {
         this.currentManager = Preconditions.checkNotNull(manager, "Manager");
     }
     
-    pointcut createInjector(): call(Injector Guice.createInjector(..));
-    
-    @SuppressAjWarnings("adviceDidNotMatch")
-    after() returning (Injector injector): createInjector() {
-        LOG.trace("Injecting members on {}", this);
-        if (currentManager == null) {
-            injector.injectMembers(this);
-        } else {
-            throw new IllegalStateException("An injector has already been created");
-        }
-    }
-
     pointcut transactional(): execution(@Transactional * *.*(..));
 
     @SuppressAjWarnings("adviceDidNotMatch")
