@@ -20,6 +20,7 @@
 package de.cosmocode.palava.jpa;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
@@ -39,6 +40,7 @@ public final class PersistenceModule implements Module {
     @Override
     public void configure(Binder binder) {
         binder.bind(PersistenceService.class).to(DefaultPersistenceService.class).in(Singleton.class);
+        binder.bind(EntityManagerFactory.class).to(PersistenceService.class).in(Singleton.class);
         binder.bind(EntityManager.class).toProvider(PersistenceService.class).in(IpcConnectionScoped.class);
     }
 
