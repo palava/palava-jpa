@@ -75,7 +75,6 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
     }
     
     @Override
-    @IpcConnectionScoped
     public EntityManager get() {
         return createEntityManager();
     }
