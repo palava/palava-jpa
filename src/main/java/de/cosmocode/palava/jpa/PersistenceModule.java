@@ -26,6 +26,8 @@ import com.google.inject.Module;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import de.cosmocode.palava.ipc.IpcConnectionScoped;
+
 /**
  * {@link Module} which binds the {@link PersistenceService} interface
  * to its default implementation and registers as a {@link Provider} for {@link EntityManager}s.
@@ -37,7 +39,7 @@ public final class PersistenceModule implements Module {
     @Override
     public void configure(Binder binder) {
         binder.bind(PersistenceService.class).to(DefaultPersistenceService.class).in(Singleton.class);
-        binder.bind(EntityManager.class).toProvider(PersistenceService.class);
+        binder.bind(EntityManager.class).toProvider(PersistenceService.class).in(IpcConnectionScoped.class);
     }
 
 }
