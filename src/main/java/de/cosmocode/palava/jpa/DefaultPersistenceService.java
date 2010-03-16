@@ -40,29 +40,29 @@ import de.cosmocode.palava.ipc.IpcConnectionScoped;
 
 /**
  * Default implementation of the {@link PersistenceService} interface.
- * 
+ *
  * @author Willi Schoenborn
  */
 final class DefaultPersistenceService implements PersistenceService, Initializable, Disposable {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultPersistenceService.class);
-    
+
     private final String unitName;
 
     private EntityManagerFactory factory;
-    
+
     private Properties properties;
-    
+
     @Inject
     public DefaultPersistenceService(@Named(PersistenceConfig.UNIT_NAME) String unitName) {
         this.unitName = Preconditions.checkNotNull(unitName, "UnitName");
     }
-    
+
     @Inject(optional = true)
     void setProperties(@Named(PersistenceConfig.PROPERTIES) Properties properties) {
         this.properties = Preconditions.checkNotNull(properties, "Properties");
     }
-    
+
     @Override
     public void initialize() throws LifecycleException {
         if (properties == null) {
@@ -73,21 +73,21 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
             this.factory = Persistence.createEntityManagerFactory(unitName, properties);
         }
     }
-    
+
     @Override
     public EntityManager get() {
-        return createEntityManager();
+        return new DestroyableEntityManager(createEntityManager());
     }
 
     @Override
     public EntityManager createEntityManager() {
-        return new DestroyableEntityManager(factory.createEntityManager());
+        return factory.createEntityManager();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public EntityManager createEntityManager(Map map) {
-        return new DestroyableEntityManager(factory.createEntityManager(map));
+        return factory.createEntityManager(map);
     }
 
     @Override
@@ -100,7 +100,7 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
         LOG.info("Closing {}", factory);
         factory.close();
     }
-    
+
     @Override
     public void dispose() {
         close();
