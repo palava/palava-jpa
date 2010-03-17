@@ -19,6 +19,7 @@
 
 package de.cosmocode.palava.entity;
 
+import de.cosmocode.palava.jpa.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,31 +28,35 @@ import de.cosmocode.palava.model.base.EntityBase;
 
 /**
  * Abstract base implementation of the {@link EntityService} interface.
- * 
+ *
  * <p>
  *   <strong>Note</strong>: This implementation does not provide a meaningful
  *   {@link EntityService#delete(EntityBase)} method. Decisions about deleting
- *   or hiding entites are left to sub-classes.
+ *   or hiding entites are left to sub-classes. Create and update are marked
+ *   with @Transactional to use or create transactions for the database actions.
  * </p>
  *
  * @author Willi Schoenborn
  * @param <T>
  */
-public abstract class AbstractEntityService<T extends EntityBase> extends AbstractReadOnlyEntityService<T> 
+public abstract class AbstractEntityService<T extends EntityBase> extends AbstractReadOnlyEntityService<T>
     implements EntityService<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractEntityService.class);
-    
+
     @Override
+    @Transactional
     public T create(T entity) {
         LOG.debug("Creating {} in database", entity);
         entityManager().persist(entity);
         return entity;
     }
-    
+
     @Override
+    @Transactional
     public T update(T entity) {
-        // TODO what should we do here? flush?
+        // we don't have to do anything here
+        // @Transactional will commit the update in the near future
         return entity;
     }
 
@@ -59,5 +64,5 @@ public abstract class AbstractEntityService<T extends EntityBase> extends Abstra
     public <C extends Copyable<T>> T createCopy(C entity) {
         return create(entity.copy());
     }
-    
+
 }
