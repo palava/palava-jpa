@@ -147,7 +147,7 @@ public abstract class AbstractReadOnlyEntityService<T extends EntityBase> implem
     @Override
     public Query prepare(Query query, Object... parameters) {
         for (int i = 0; i < parameters.length; i++) {
-            query.setParameter(i, parameters[i]);
+            query.setParameter(i + 1, parameters[i]);
         }
         return query;
     }
