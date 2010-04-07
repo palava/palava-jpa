@@ -36,7 +36,6 @@ import com.google.inject.name.Named;
 import de.cosmocode.palava.core.lifecycle.Disposable;
 import de.cosmocode.palava.core.lifecycle.Initializable;
 import de.cosmocode.palava.core.lifecycle.LifecycleException;
-import de.cosmocode.palava.ipc.IpcConnectionScoped;
 
 /**
  * Default implementation of the {@link PersistenceService} interface.
@@ -72,11 +71,6 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
             LOG.info("Creating entity manager factory using {}", properties);
             this.factory = Persistence.createEntityManagerFactory(unitName, properties);
         }
-    }
-
-    @Override
-    public EntityManager get() {
-        return new DestroyableEntityManager(createEntityManager());
     }
 
     @Override

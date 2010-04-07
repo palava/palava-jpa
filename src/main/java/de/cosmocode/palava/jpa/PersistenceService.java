@@ -22,8 +22,6 @@ package de.cosmocode.palava.jpa;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import com.google.inject.Provider;
-
 import de.cosmocode.palava.core.Service;
 import de.cosmocode.palava.core.scope.Destroyable;
 
@@ -37,6 +35,6 @@ import de.cosmocode.palava.core.scope.Destroyable;
  *
  * @author Willi Schoenborn
  */
-public interface PersistenceService extends EntityManagerFactory, Service, Provider<EntityManager> {
+public interface PersistenceService extends EntityManagerFactory, Service {
     
 }

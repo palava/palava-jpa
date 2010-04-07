@@ -25,6 +25,8 @@ import javax.persistence.EntityManagerFactory;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Provider;
+import com.google.inject.Provides;
+import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 
 import de.cosmocode.palava.ipc.IpcConnectionScoped;
@@ -41,7 +43,20 @@ public final class PersistenceModule implements Module {
     public void configure(Binder binder) {
         binder.bind(PersistenceService.class).to(DefaultPersistenceService.class).in(Singleton.class);
         binder.bind(EntityManagerFactory.class).to(PersistenceService.class).in(Singleton.class);
-        binder.bind(EntityManager.class).toProvider(PersistenceService.class).in(IpcConnectionScoped.class);
+        binder.bind(EntityManager.class).to(ScopeAwareEntityManager.class).in(Scopes.NO_SCOPE);
+    }
+    
+    /**
+     * Provides an {@link IpcConnectionScoped} {@link EntityManager} annotated with {@link Scoped}.
+     * 
+     * @param service the required {@link PersistenceService} which produces {@link EntityManager}.
+     * @return a {@link DestroyableEntityManager}
+     */
+    @Provides
+    @Scoped
+    @IpcConnectionScoped
+    EntityManager getEntityManager(PersistenceService service) {
+        return new DestroyableEntityManager(service.createEntityManager()); 
     }
 
 }
