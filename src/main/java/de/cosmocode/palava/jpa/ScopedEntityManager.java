@@ -20,51 +20,18 @@
 
 package de.cosmocode.palava.jpa;
 
-import javax.persistence.EntityTransaction;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-import com.google.common.base.Preconditions;
+import com.google.inject.BindingAnnotation;
 
 /**
- * Abstract decorator for {@link EntityTransaction}s.
+ * A binding annotation which will be used to mark the scoped entity manager binding.
  *
  * @author Willi Schoenborn
  */
-abstract class ForwardingTransaction implements EntityTransaction {
+@Retention(RetentionPolicy.RUNTIME)
+@BindingAnnotation
+@interface ScopedEntityManager {
 
-    private final EntityTransaction tx;
-    
-    public ForwardingTransaction(EntityTransaction tx) {
-        this.tx = Preconditions.checkNotNull(tx, "Tx");
-    }
-    
-    @Override
-    public void begin() {
-        tx.begin();
-    }
-
-    @Override
-    public void commit() {
-        tx.commit();
-    }
-
-    @Override
-    public boolean getRollbackOnly() {
-        return tx.getRollbackOnly();
-    }
-
-    @Override
-    public boolean isActive() {
-        return tx.isActive();
-    }
-
-    @Override
-    public void rollback() {
-        tx.rollback();
-    }
-
-    @Override
-    public void setRollbackOnly() {
-        tx.setRollbackOnly();
-    }
-    
 }
