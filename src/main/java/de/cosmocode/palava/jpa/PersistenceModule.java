@@ -43,18 +43,16 @@ public final class PersistenceModule implements Module {
     public void configure(Binder binder) {
         binder.bind(PersistenceService.class).to(DefaultPersistenceService.class).in(Singleton.class);
         binder.bind(EntityManagerFactory.class).to(PersistenceService.class).in(Singleton.class);
-        binder.bind(EntityManager.class).to(ScopeAwareEntityManager.class).in(UnitOfWork.class);
     }
     
     /**
-     * Provides an {@link IpcConnectionScoped} {@link EntityManager} annotated with {@link ScopedEntityManager}.
+     * Provides an {@link IpcConnectionScoped} {@link EntityManager} annotated with {@link UnitOfWork}.
      * 
      * @param service the required {@link PersistenceService} which produces {@link EntityManager}.
      * @return a {@link DestroyableEntityManager}
      */
     @Provides
-    @ScopedEntityManager
-    @IpcConnectionScoped
+    @UnitOfWork
     EntityManager getEntityManager(PersistenceService service) {
         return new DestroyableEntityManager(service.createEntityManager()); 
     }
