@@ -23,7 +23,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import de.cosmocode.palava.core.Service;
-import de.cosmocode.palava.core.scope.Destroyable;
+import de.cosmocode.palava.scope.Destroyable;
 
 /**
  * A {@link Service} adaption of the {@link EntityManagerFactory} interface.

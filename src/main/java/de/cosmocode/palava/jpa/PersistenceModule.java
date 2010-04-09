@@ -28,8 +28,8 @@ import com.google.inject.Provider;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 
-import de.cosmocode.palava.core.scope.UnitOfWork;
 import de.cosmocode.palava.ipc.IpcConnectionScoped;
+import de.cosmocode.palava.scope.UnitOfWork;
 
 /**
  * {@link Module} which binds the {@link PersistenceService} interface
