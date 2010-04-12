@@ -22,6 +22,7 @@ package de.cosmocode.palava.entity;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -61,7 +62,7 @@ public interface ReadOnlyEntityService<T extends EntityBase> {
      * @param query the query being executed
      * @param parameters the parameters the query needs
      * @return the single entity found using the given query
-     * @throws EntityNotFoundException if there is no matching entity
+     * @throws NoResultException if there is no matching entity
      * @throws NonUniqueResultException if there is more than one matching entity
      */
     T read(Query query, Object... parameters);
@@ -72,7 +73,7 @@ public interface ReadOnlyEntityService<T extends EntityBase> {
      * @param queryName the name of the query being executed
      * @param parameters the parameters the query needs
      * @return the single entity found using the given query
-     * @throws EntityNotFoundException if there is no matching entity
+     * @throws NoResultException if there is no matching entity
      * @throws NonUniqueResultException if there is more than one matching entity
      */
     T read(String queryName, Object... parameters);
