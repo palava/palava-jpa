@@ -21,6 +21,7 @@ package de.cosmocode.palava.entity;
 
 import javax.persistence.PersistenceException;
 
+import de.cosmocode.collections.Procedure;
 import de.cosmocode.palava.model.base.Copyable;
 import de.cosmocode.palava.model.base.EntityBase;
 
@@ -49,6 +50,22 @@ public interface EntityService<T extends EntityBase> extends ReadOnlyEntityServi
      * @return the updated entity
      */
     T update(T entity);
+    
+    /**
+     * Performs an operation on each element of type T.
+     * 
+     * @param procedure the command which will be called with each instance of T
+     */
+    void each(Procedure<? super T> procedure);
+    
+    /**
+     * Performs an operation on each element of type T and flushes everytime
+     * the configured batchSize is hit.
+     * 
+     * @param procedure the command which will be called with each instance of T
+     * @param batchSize the number of iterations between each flush
+     */
+    void each(Procedure<? super T> procedure, int batchSize);
     
     /**
      * Deletes an entity.

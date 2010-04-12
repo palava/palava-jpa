@@ -19,10 +19,11 @@
 
 package de.cosmocode.palava.entity;
 
-import de.cosmocode.palava.jpa.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.cosmocode.collections.Procedure;
+import de.cosmocode.palava.jpa.Transactional;
 import de.cosmocode.palava.model.base.Copyable;
 import de.cosmocode.palava.model.base.EntityBase;
 
@@ -33,11 +34,11 @@ import de.cosmocode.palava.model.base.EntityBase;
  *   <strong>Note</strong>: This implementation does not provide a meaningful
  *   {@link EntityService#delete(EntityBase)} method. Decisions about deleting
  *   or hiding entites are left to sub-classes. Create and update are marked
- *   with @Transactional to use or create transactions for the database actions.
+ *   with @Transactional to use or create transactions for database actions.
  * </p>
  *
  * @author Willi Schoenborn
- * @param <T>
+ * @param <T> generic entity type
  */
 public abstract class AbstractEntityService<T extends EntityBase> extends AbstractReadOnlyEntityService<T>
     implements EntityService<T> {
@@ -60,6 +61,26 @@ public abstract class AbstractEntityService<T extends EntityBase> extends Abstra
         return entity;
     }
 
+    @Override
+    public void each(Procedure<? super T> procedure) {
+        for (T entity : iterate()) {
+            procedure.apply(entity);
+        }
+    }
+    
+    @Override
+    public void each(Procedure<? super T> procedure, int batchSize) {
+        int i = 1;
+        for (T entity : iterate(batchSize)) {
+            procedure.apply(entity);
+            // flush every 'batchSize' elements
+            if (i++ % batchSize == 0) {
+                entityManager().flush();
+                // TODO clear?
+            }
+        }
+    }
+    
     @Override
     public <C extends Copyable<T>> T createCopy(C entity) {
         return create(entity.copy());

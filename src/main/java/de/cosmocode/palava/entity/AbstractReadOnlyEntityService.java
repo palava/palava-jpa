@@ -19,12 +19,16 @@
 
 package de.cosmocode.palava.entity;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import com.google.common.collect.Iterators;
+import com.google.common.collect.UnmodifiableIterator;
 import com.google.inject.Provider;
 
 import de.cosmocode.palava.model.base.EntityBase;
@@ -95,9 +99,70 @@ public abstract class AbstractReadOnlyEntityService<T extends EntityBase> implem
     }
 
     @Override
-    public List<T> all() {
+    public List<T> iterate() {
         final String query = String.format("from %s", entityClass().getSimpleName());
         return list(entityManager().createQuery(query));
+    }
+    
+    @Override
+    public Iterable<T> iterate(final int batchSize) {
+        return new Iterable<T>() {
+            
+            @Override
+            public Iterator<T> iterator() {
+                return new PreloadingIterator(batchSize);
+            }
+            
+        };
+    }
+    
+    /**
+     * A preloading iterator which uses a configurable batch size.
+     *
+     * @author Willi Schoenborn
+     */
+    private final class PreloadingIterator extends UnmodifiableIterator<T> {
+
+        private final int batchSize;
+        private final Query query;
+        
+        private int nextIndex;
+        
+        private Iterator<T> current = Iterators.emptyIterator();
+        private Iterator<T> next;
+
+        public PreloadingIterator(int batchSize) {
+            this.batchSize = batchSize;
+            final String jpql = String.format("from {}", entityClass().getSimpleName());
+            this.query = entityManager().createQuery(jpql).setMaxResults(batchSize);
+            preload();
+        }
+        
+        private void preload() {
+            query.setFirstResult(nextIndex);
+            next = list(query).iterator();
+            // TODO make sure overflows *work* as expected 
+            nextIndex += batchSize;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return current.hasNext() || next.hasNext();
+        }
+       
+        @Override
+        public T next() {
+            if (current.hasNext()) {
+                return current.next();
+            } else if (next.hasNext()) {
+                current = next;
+                preload();
+                return current.next();
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
+        
     }
 
     @Override

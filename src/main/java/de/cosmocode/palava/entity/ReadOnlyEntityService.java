@@ -27,6 +27,8 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import com.google.common.collect.UnmodifiableIterator;
+
 import de.cosmocode.palava.model.base.EntityBase;
 
 /**
@@ -34,6 +36,7 @@ import de.cosmocode.palava.model.base.EntityBase;
  *
  * @author Willi Schoenborn
  * @param <T> the generic entity type
+ * @since 2.0-SNAPSHOT
  */
 public interface ReadOnlyEntityService<T extends EntityBase> {
 
@@ -112,7 +115,15 @@ public interface ReadOnlyEntityService<T extends EntityBase> {
      * 
      * @return a list of all entites
      */
-    List<T> all();
+    List<T> iterate();
+
+    /**
+     * Iteraters through all entities of type T using the specified batch size.
+     * 
+     * @param batchSize the amount of preloaded elements
+     * @return an {@link Iterable} of {@link UnmodifiableIterator}s over all elements of T
+     */
+    Iterable<T> iterate(int batchSize);
     
     /**
      * Retrieves a projection, a single column, single row value.
@@ -198,20 +209,30 @@ public interface ReadOnlyEntityService<T extends EntityBase> {
      * Prepares the specified query with the given parameters by calling
      * {@link Query#setParameter(int, Object)} for every parameter.
      * 
+     * @deprecated Clients should not use this method directly as it reveals implementation details.
+     * Scheduled for removal without substitution.
+     * 
      * @param query the query being prepared
      * @param parameters the parameters the query requires
      * @return the specified query
+     * @throws UnsupportedOperationException if the implementation does not support this feature
      */
+    @Deprecated
     Query prepare(Query query, Object... parameters);
     
     /**
      * Prepares the query associated with the specified name with the given parameters
      * by calling {@link Query#setParameter(int, Object)} for every parameter.
      * 
+     * @deprecated Clients should not use this method directly as it reveals implementation details.
+     * Scheduled for removal without substitution. 
+     * 
      * @param queryName the name of the query being prepared
      * @param parameters the parameters the query requires
      * @return the prepared query
+     * @throws UnsupportedOperationException if the implementation does not support this feature
      */
+    @Deprecated
     Query prepare(String queryName, Object... parameters);
 
 }
