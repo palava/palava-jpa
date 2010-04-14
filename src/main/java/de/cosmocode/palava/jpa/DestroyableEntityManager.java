@@ -20,10 +20,6 @@
 package de.cosmocode.palava.jpa;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.FlushModeType;
-import javax.persistence.LockModeType;
-import javax.persistence.Query;
 
 import com.google.common.base.Preconditions;
 
@@ -37,7 +33,7 @@ import de.cosmocode.patterns.Decorator;
  * @author Willi Schoenborn
  */
 @Decorator(EntityManager.class)
-public final class DestroyableEntityManager implements EntityManager, Destroyable {
+public final class DestroyableEntityManager extends ForwardingEntityManager implements Destroyable {
     
     private final EntityManager manager;
 
@@ -46,116 +42,15 @@ public final class DestroyableEntityManager implements EntityManager, Destroyabl
     }
     
     @Override
-    public void clear() {
-        manager.clear();
+    protected EntityManager delegate() {
+        return manager;
     }
-
+    
     @Override
     public void close() {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public boolean contains(Object entity) {
-        return manager.contains(entity);
-    }
-
-    @Override
-    public Query createNamedQuery(String name) {
-        return manager.createNamedQuery(name);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Query createNativeQuery(String sqlString, Class resultClass) {
-        return manager.createNativeQuery(sqlString, resultClass);
-    }
-
-    @Override
-    public Query createNativeQuery(String sqlString, String resultSetMapping) {
-        return manager.createNativeQuery(sqlString, resultSetMapping);
-    }
-
-    @Override
-    public Query createNativeQuery(String sqlString) {
-        return manager.createNativeQuery(sqlString);
-    }
-
-    @Override
-    public Query createQuery(String qlString) {
-        return manager.createQuery(qlString);
-    }
-
-    @Override
-    public <T> T find(Class<T> entityClass, Object primaryKey) {
-        return manager.find(entityClass, primaryKey);
-    }
-
-    @Override
-    public void flush() {
-        manager.flush();
-    }
-
-    @Override
-    public Object getDelegate() {
-        return manager.getDelegate();
-    }
-
-    @Override
-    public FlushModeType getFlushMode() {
-        return manager.getFlushMode();
-    }
-
-    @Override
-    public <T> T getReference(Class<T> entityClass, Object primaryKey) {
-        return manager.getReference(entityClass, primaryKey);
-    }
-
-    @Override
-    public EntityTransaction getTransaction() {
-        return manager.getTransaction();
-    }
-
-    @Override
-    public boolean isOpen() {
-        return manager.isOpen();
-    }
-
-    @Override
-    public void joinTransaction() {
-        manager.joinTransaction();
-    }
-
-    @Override
-    public void lock(Object entity, LockModeType lockMode) {
-        manager.lock(entity, lockMode);
-    }
-
-    @Override
-    public <T> T merge(T entity) {
-        return manager.merge(entity);
-    }
-
-    @Override
-    public void persist(Object entity) {
-        manager.persist(entity);
-    }
-
-    @Override
-    public void refresh(Object entity) {
-        manager.refresh(entity);
-    }
-
-    @Override
-    public void remove(Object entity) {
-        manager.remove(entity);
-    }
-
-    @Override
-    public void setFlushMode(FlushModeType flushMode) {
-        manager.setFlushMode(flushMode);
-    }
-    
     @Override
     public void destroy() {
         if (manager.isOpen()) manager.close();
