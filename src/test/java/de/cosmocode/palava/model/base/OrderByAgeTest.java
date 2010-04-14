@@ -63,6 +63,7 @@ public final class OrderByAgeTest {
         Collections.sort(list, EntityBase.ORDER_BY_AGE);
         
         Assert.assertEquals(ImmutableList.of(second, third, first), list);
+        EasyMock.verify(first, second, third);
     }
 
 }

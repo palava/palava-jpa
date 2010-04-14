@@ -60,6 +60,7 @@ public final class OrderByIdTest {
         Collections.sort(list, EntityBase.ORDER_BY_ID);
         
         Assert.assertEquals(ImmutableList.of(first, third, second), list);
+        EasyMock.verify(first, second, third);
     }
 
 }

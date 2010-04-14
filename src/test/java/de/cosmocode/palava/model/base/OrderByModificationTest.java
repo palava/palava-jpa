@@ -63,6 +63,7 @@ public final class OrderByModificationTest {
         Collections.sort(list, EntityBase.ORDER_BY_MODIFICATION);
         
         Assert.assertEquals(ImmutableList.of(third, second, first), list);
+        EasyMock.verify(first, second, third);
     }
     
 }
