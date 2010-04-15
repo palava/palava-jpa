@@ -31,10 +31,7 @@ import de.cosmocode.palava.ipc.IpcCommand;
  *
  * @author Willi Schoenborn
  */
-@Target({
-    ElementType.TYPE,
-    ElementType.METHOD
-})
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Transactional {
 
