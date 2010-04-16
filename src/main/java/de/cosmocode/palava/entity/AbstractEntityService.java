@@ -45,29 +45,31 @@ public abstract class AbstractEntityService<T extends EntityBase> extends Abstra
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractEntityService.class);
 
-    @Override
     @Transactional
+    @Override
     public T create(T entity) {
         LOG.debug("Creating {} in database", entity);
         entityManager().persist(entity);
         return entity;
     }
 
-    @Override
     @Transactional
+    @Override
     public T update(T entity) {
         // we don't have to do anything here
         // @Transactional will commit the update in the near future
         return entity;
     }
 
+    @Transactional
     @Override
     public void each(Procedure<? super T> procedure) {
         for (T entity : iterate()) {
             procedure.apply(entity);
         }
     }
-    
+
+    @Transactional
     @Override
     public void each(Procedure<? super T> procedure, int batchSize) {
         int i = 1;
@@ -80,7 +82,8 @@ public abstract class AbstractEntityService<T extends EntityBase> extends Abstra
             }
         }
     }
-    
+
+    @Transactional
     @Override
     public <C extends Copyable<T>> T createCopy(C entity) {
         return create(entity.copy());

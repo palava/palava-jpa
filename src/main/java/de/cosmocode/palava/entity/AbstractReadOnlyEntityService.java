@@ -31,6 +31,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.UnmodifiableIterator;
 import com.google.inject.Provider;
 
+import de.cosmocode.palava.jpa.Transactional;
 import de.cosmocode.palava.model.base.EntityBase;
 
 /**
@@ -56,11 +57,13 @@ public abstract class AbstractReadOnlyEntityService<T extends EntityBase> implem
      */
     protected abstract Class<T> entityClass();
 
+    @Transactional
     @Override
     public T get(long identifier) {
         return entityManager().find(entityClass(), identifier);
     }
-    
+
+    @Transactional
     @Override
     public T read(long identifier) {
         final T entity = get(identifier);
@@ -70,40 +73,47 @@ public abstract class AbstractReadOnlyEntityService<T extends EntityBase> implem
             return entity;
         }
     }
-    
+
+    @Transactional
     @Override
     @SuppressWarnings("unchecked")
     public T read(Query query, Object... parameters) {
         return (T) prepare(query, parameters).getSingleResult();
     }
-    
+
+    @Transactional
     @Override
     public T read(String queryName, Object... parameters) {
         return read(entityManager().createNamedQuery(queryName), parameters);
     }
-    
+
+    @Transactional
     @Override
     public T reference(long identifier) {
         return entityManager().getReference(entityClass(), identifier);
     }
-    
+
+    @Transactional
     @Override
     @SuppressWarnings("unchecked")
     public List<T> list(Query query, Object... parameters) {
         return prepare(query, parameters).getResultList();
     }
-    
+
+    @Transactional
     @Override
     public List<T> list(String queryName, Object... parameters) {
         return list(entityManager().createNamedQuery(queryName), parameters);
     }
 
+    @Transactional
     @Override
     public List<T> iterate() {
         final String query = String.format("from %s", entityClass().getSimpleName());
         return list(entityManager().createQuery(query));
     }
-    
+
+    @Transactional
     @Override
     public Iterable<T> iterate(final int batchSize) {
         return new Iterable<T>() {
@@ -165,45 +175,53 @@ public abstract class AbstractReadOnlyEntityService<T extends EntityBase> implem
         
     }
 
+    @Transactional
     @Override
     @SuppressWarnings("unchecked")
     public <P> P projection(Query query, Object... parameters) {
         return (P) prepare(query, parameters).getSingleResult();
     }
 
+    @Transactional
     @Override
     public <P> P projection(String queryName, Object... parameters) {
         return this.<P>projection(entityManager().createNamedQuery(queryName), parameters);
     }
 
+    @Transactional
     @Override
     @SuppressWarnings("unchecked")
     public <P> P[] projections(Query query, Object... parameters) {
         return (P[]) prepare(query, parameters).getSingleResult();
     }
-    
+
+    @Transactional
     @Override
     public <P> P[] projections(String queryName, Object... parameters) {
         return this.<P>projections(entityManager().createNamedQuery(queryName), parameters);
     }
-    
+
+    @Transactional
     @Override
     @SuppressWarnings("unchecked")
     public <P> List<P> projectionList(Query query, Object... parameters) {
         return prepare(query, parameters).getResultList();
     }
-    
+
+    @Transactional
     @Override
     public <P> List<P> projectionList(String queryName, Object... parameters) {
         return projectionList(entityManager().createNamedQuery(queryName), parameters);
     }
-    
+
+    @Transactional
     @Override
     @SuppressWarnings("unchecked")
     public <P> List<P[]> projectionsList(Query query, Object... parameters) {
         return prepare(query, parameters).getResultList();
     }
-    
+
+    @Transactional
     @Override
     public <P> List<P[]> projectionsList(String queryName, Object... parameters) {
         return projectionsList(entityManager().createNamedQuery(queryName), parameters);
