@@ -22,11 +22,10 @@ package de.cosmocode.palava.jpa;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import de.cosmocode.palava.core.Service;
 import de.cosmocode.palava.scope.Destroyable;
 
 /**
- * A {@link Service} adaption of the {@link EntityManagerFactory} interface.
+ * A service adaption of the {@link EntityManagerFactory} interface.
  * 
  * <p>
  *   <strong>Note</strong>: the created {@link EntityManager} instances should be decorated
@@ -35,6 +34,6 @@ import de.cosmocode.palava.scope.Destroyable;
  *
  * @author Willi Schoenborn
  */
-public interface PersistenceService extends EntityManagerFactory, Service {
+public interface PersistenceService extends EntityManagerFactory {
     
 }
