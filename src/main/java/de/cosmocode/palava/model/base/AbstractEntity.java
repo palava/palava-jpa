@@ -29,9 +29,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
-import de.cosmocode.json.JSONRenderer;
-import de.cosmocode.json.RenderLevel;
-
 /**
  * Abstract base implementation of the {@link EntityBase} interface.
  * 
@@ -160,22 +157,6 @@ public abstract class AbstractEntity implements EntityBase {
         return true;
     }
 
-    @Override
-    public JSONRenderer renderAsMap(JSONRenderer renderer) {
-        if (renderer.ge(RenderLevel.TINY)) {
-            renderer.
-                key("id").value(getId());
-        }
-        if (renderer.ge(RenderLevel.MEDIUM)) {
-            renderer.
-                key("createdAt").value(getCreatedAt()).
-                key("modifiedAt").value(getModifiedAt()).
-                key("deletedAt").value(getDeletedAt()).
-                key("isDeleted").value(isDeleted());
-        }
-        return renderer;
-    }
-    
     /**
      * <p>
      *   This implementation produces a string containing <strong>the simple class name of this entity,

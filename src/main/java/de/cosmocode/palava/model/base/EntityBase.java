@@ -25,7 +25,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Ordering;
 
-import de.cosmocode.json.JSONMapable;
+import de.cosmocode.rendering.Renderable;
 
 /**
  * The {@link EntityBase} defines the most basic information almost every
@@ -33,10 +33,11 @@ import de.cosmocode.json.JSONMapable;
  *
  * @author Willi Schoenborn
  */
-public interface EntityBase extends JSONMapable {
+public interface EntityBase extends Renderable {
 
     /**
-     * Allows ascending ordering by id.
+     * Allows ascending ordering by id. Beware of autoboxing,
+     * as this comparator converts {@code long} to {@link Long} repeatedly.
      */
     Ordering<EntityBase> ORDER_BY_ID = Ordering.natural().nullsLast().onResultOf(new Function<EntityBase, Long>() {
         
