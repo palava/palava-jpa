@@ -29,7 +29,6 @@ import com.google.common.collect.UnmodifiableIterator;
 import com.google.inject.Provider;
 
 import de.cosmocode.palava.jpa.Transactional;
-import de.cosmocode.palava.model.base.EntityBase;
 
 /**
  * Abstract skeleton implementation of the {@link ReadOnlyEntityService} interface.
@@ -37,7 +36,7 @@ import de.cosmocode.palava.model.base.EntityBase;
  * @author Willi Schoenborn
  * @param <T> the generic entity type
  */
-public abstract class AbstractReadOnlyEntityService<T extends EntityBase> implements ReadOnlyEntityService<T> {
+public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntityService<T> {
 
     /**
      * Provides an {@link EntityManager} this implementation uses to do it's
@@ -56,13 +55,13 @@ public abstract class AbstractReadOnlyEntityService<T extends EntityBase> implem
 
     @Transactional
     @Override
-    public T get(long identifier) {
+    public T get(Object identifier) {
         return entityManager().find(entityClass(), identifier);
     }
 
     @Transactional
     @Override
-    public T read(long identifier) {
+    public T read(Object identifier) {
         final T entity = get(identifier);
         if (entity == null) {
             throw new PersistenceException(String.format("No entity found for id #%s", identifier));

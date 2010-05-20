@@ -26,8 +26,6 @@ import javax.persistence.Query;
 
 import com.google.common.collect.UnmodifiableIterator;
 
-import de.cosmocode.palava.model.base.EntityBase;
-
 /**
  * A service which allows readonly-operations on entites of a specific type.
  *
@@ -35,7 +33,7 @@ import de.cosmocode.palava.model.base.EntityBase;
  * @param <T> the generic entity type
  * @since 2.0-SNAPSHOT
  */
-public interface ReadOnlyEntityService<T extends EntityBase> {
+public interface ReadOnlyEntityService<T> {
 
     /**
      * Retrieves an entity from the database.
@@ -44,7 +42,7 @@ public interface ReadOnlyEntityService<T extends EntityBase> {
      * @return the entity associated with the given identifier
      *         or null if there is no such entity
      */
-    T get(long identifier);
+    T get(Object identifier);
     
     /**
      * Retrieves an entity from the database.
@@ -54,7 +52,7 @@ public interface ReadOnlyEntityService<T extends EntityBase> {
      *         or null if there is no such entity
      * @throws PersistenceException if there is no entity with the given identifier
      */
-    T read(long identifier);
+    T read(Object identifier);
     
     /**
      * Retrievs an entity from the database.

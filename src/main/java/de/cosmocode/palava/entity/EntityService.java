@@ -20,7 +20,6 @@ import javax.persistence.PersistenceException;
 
 import de.cosmocode.collections.Procedure;
 import de.cosmocode.palava.model.base.Copyable;
-import de.cosmocode.palava.model.base.EntityBase;
 
 /**
  * A service which allows crud-operations on entites of a specific type.
@@ -28,7 +27,7 @@ import de.cosmocode.palava.model.base.EntityBase;
  * @author Willi Schoenborn
  * @param <T> the generic entity type
  */
-public interface EntityService<T extends EntityBase> extends ReadOnlyEntityService<T> {
+public interface EntityService<T> extends ReadOnlyEntityService<T> {
 
     /**
      * Saves an entity to the database.

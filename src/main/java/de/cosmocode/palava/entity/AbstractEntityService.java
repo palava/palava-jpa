@@ -37,7 +37,7 @@ import de.cosmocode.palava.model.base.EntityBase;
  * @author Willi Schoenborn
  * @param <T> generic entity type
  */
-public abstract class AbstractEntityService<T extends EntityBase> extends AbstractReadOnlyEntityService<T>
+public abstract class AbstractEntityService<T> extends AbstractReadOnlyEntityService<T>
     implements EntityService<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractEntityService.class);
