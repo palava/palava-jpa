@@ -59,6 +59,7 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
         this.properties = Preconditions.checkNotNull(properties, "Properties");
     }
 
+    @Inject(optional = true)
     void setFlushMode(@Named(PersistenceConfig.FLUSH_MODE) String flushMode) {
         flushModeType = FlushModeType.valueOf(flushMode);
         LOG.info("Configuring EntityManagers with FlushMode {}", flushModeType.name());
