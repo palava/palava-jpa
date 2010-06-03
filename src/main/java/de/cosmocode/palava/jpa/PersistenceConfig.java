@@ -20,12 +20,15 @@ package de.cosmocode.palava.jpa;
  * Constant holder class for persistence config keys.
  *
  * @author Willi Schoenborn
+ * @author Tobias Sarnowski
  */
 public final class PersistenceConfig {
 
     public static final String PREFIX = "persistence.";
     
     public static final String UNIT_NAME = PREFIX + "unitName";
+
+    public static final String FLUSH_MODE = PREFIX + "flushMode";
     
     public static final String PROPERTIES = PREFIX + "properties";
     

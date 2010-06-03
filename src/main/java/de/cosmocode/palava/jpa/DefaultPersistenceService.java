@@ -16,28 +16,27 @@
 
 package de.cosmocode.palava.jpa;
 
-import java.util.Map;
-import java.util.Properties;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-
 import de.cosmocode.palava.core.lifecycle.Disposable;
 import de.cosmocode.palava.core.lifecycle.Initializable;
 import de.cosmocode.palava.core.lifecycle.LifecycleException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.FlushModeType;
+import javax.persistence.Persistence;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Default implementation of the {@link PersistenceService} interface.
  *
  * @author Willi Schoenborn
+ * @author Tobias Sarnowski
  */
 final class DefaultPersistenceService implements PersistenceService, Initializable, Disposable {
 
@@ -48,6 +47,7 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
     private EntityManagerFactory factory;
 
     private Properties properties;
+    private FlushModeType flushModeType;
 
     @Inject
     public DefaultPersistenceService(@Named(PersistenceConfig.UNIT_NAME) String unitName) {
@@ -57,6 +57,11 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
     @Inject(optional = true)
     void setProperties(@Named(PersistenceConfig.PROPERTIES) Properties properties) {
         this.properties = Preconditions.checkNotNull(properties, "Properties");
+    }
+
+    void setFlushMode(@Named(PersistenceConfig.FLUSH_MODE) String flushMode) {
+        flushModeType = FlushModeType.valueOf(flushMode);
+        LOG.info("Configuring EntityManagers with FlushMode {}", flushModeType.name());
     }
 
     @Override
@@ -72,13 +77,23 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
 
     @Override
     public EntityManager createEntityManager() {
-        return factory.createEntityManager();
+        EntityManager entityManager = factory.createEntityManager();
+        if (flushModeType != null) {
+            LOG.trace("Setting FlushMode of {} to {}", entityManager, flushModeType.name());
+            entityManager.setFlushMode(flushModeType);
+        }
+        return entityManager;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public EntityManager createEntityManager(Map map) {
-        return factory.createEntityManager(map);
+        EntityManager entityManager = factory.createEntityManager(map);
+        if (flushModeType != null) {
+            LOG.trace("Setting FlushMode of {} to {}", entityManager, flushModeType.name());
+            entityManager.setFlushMode(flushModeType);
+        }
+        return entityManager;
     }
 
     @Override
