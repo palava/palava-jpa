@@ -139,7 +139,7 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
 
         public PreloadingIterator(int batchSize) {
             this.batchSize = batchSize;
-            final String jpql = String.format("from {}", entityClass().getSimpleName());
+            final String jpql = String.format("from %s", entityClass().getSimpleName());
             this.query = entityManager().createQuery(jpql).setMaxResults(batchSize);
             preload();
         }
