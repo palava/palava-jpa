@@ -65,11 +65,11 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
     @Inject(optional = true)
     void setFlushMode(@Named(PersistenceConfig.FLUSH_MODE) String flushMode) {
         flushModeType = FlushModeType.valueOf(flushMode);
-        LOG.info("Configuring EntityManagers with FlushMode {}", flushModeType.name());
     }
 
     @Override
     public void initialize() throws LifecycleException {
+        LOG.info("Configuring EntityManagers with FlushMode {}", flushModeType.name());
         if (properties == null) {
             LOG.info("Creating entity manager factory");
             this.factory = Persistence.createEntityManagerFactory(unitName);
@@ -81,7 +81,7 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
 
     @Override
     public EntityManager createEntityManager() {
-        EntityManager entityManager = factory.createEntityManager();
+        final EntityManager entityManager = factory.createEntityManager();
         if (flushModeType != null) {
             LOG.trace("Setting FlushMode of {} to {}", entityManager, flushModeType.name());
             entityManager.setFlushMode(flushModeType);
@@ -92,7 +92,7 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
     @Override
     @SuppressWarnings("unchecked")
     public EntityManager createEntityManager(Map map) {
-        EntityManager entityManager = factory.createEntityManager(map);
+        final EntityManager entityManager = factory.createEntityManager(map);
         if (flushModeType != null) {
             LOG.trace("Setting FlushMode of {} to {}", entityManager, flushModeType.name());
             entityManager.setFlushMode(flushModeType);
