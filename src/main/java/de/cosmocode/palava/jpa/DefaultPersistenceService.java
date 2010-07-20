@@ -69,7 +69,7 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
 
     @Override
     public void initialize() throws LifecycleException {
-        LOG.info("Configuring EntityManagers with FlushMode {}", flushModeType.name());
+        LOG.info("Configuring EntityManagers with FlushMode {}", flushModeType);
         if (properties == null) {
             LOG.info("Creating entity manager factory");
             this.factory = Persistence.createEntityManagerFactory(unitName);
