@@ -53,9 +53,7 @@ public abstract class AbstractEntityService<T> extends AbstractReadOnlyEntitySer
     @Transactional
     @Override
     public T update(T entity) {
-        // we don't have to do anything here
-        // @Transactional will commit the update in the near future
-        return entity;
+        return entityManager().merge(entity);
     }
 
     @Transactional
