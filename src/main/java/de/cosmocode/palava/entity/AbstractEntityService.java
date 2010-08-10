@@ -16,8 +16,12 @@
 
 package de.cosmocode.palava.entity;
 
+import javax.persistence.EntityManager;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Preconditions;
 
 import de.cosmocode.collections.Procedure;
 import de.cosmocode.palava.jpa.Transactional;
@@ -41,7 +45,7 @@ public abstract class AbstractEntityService<T> extends AbstractReadOnlyEntitySer
     implements EntityService<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractEntityService.class);
-
+    
     @Transactional
     @Override
     public T create(T entity) {
@@ -59,6 +63,7 @@ public abstract class AbstractEntityService<T> extends AbstractReadOnlyEntitySer
     @Transactional
     @Override
     public void each(Procedure<? super T> procedure) {
+        Preconditions.checkNotNull(procedure, "Procedure");
         for (T entity : iterate()) {
             procedure.apply(entity);
         }
@@ -67,15 +72,23 @@ public abstract class AbstractEntityService<T> extends AbstractReadOnlyEntitySer
     @Transactional
     @Override
     public void each(Procedure<? super T> procedure, int batchSize) {
+        each(procedure, batchSize, Batch.NOOP);
+    }
+
+    @Transactional
+    @Override
+    public void each(Procedure<? super T> procedure, int batchSize, Procedure<? super EntityManager> batchProcedure) {
+        Preconditions.checkNotNull(procedure, "Procedure");
+        Preconditions.checkNotNull(batchProcedure, "BatchProcedure");
         int i = 1;
         for (T entity : iterate(batchSize)) {
             procedure.apply(entity);
             // flush every 'batchSize' elements
             if (i++ % batchSize == 0) {
-                entityManager().flush();
-                // TODO clear?
+                batchProcedure.apply(entityManager());
             }
         }
+        
     }
 
     @Transactional

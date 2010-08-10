@@ -147,7 +147,6 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
         private void preload() {
             query.setFirstResult(nextIndex);
             next = list(query).iterator();
-            // TODO make sure overflows *work* as expected 
             nextIndex += batchSize;
         }
 

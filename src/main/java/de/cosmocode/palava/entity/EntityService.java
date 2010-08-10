@@ -16,6 +16,7 @@
 
 package de.cosmocode.palava.entity;
 
+import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 
 import de.cosmocode.collections.Procedure;
@@ -55,13 +56,29 @@ public interface EntityService<T> extends ReadOnlyEntityService<T> {
     void each(Procedure<? super T> procedure);
     
     /**
-     * Performs an operation on each element of type T and flushes everytime
-     * the configured batchSize is hit.
+     * Performs an operation on each element of type T.
      * 
      * @param procedure the command which will be called with each instance of T
      * @param batchSize the number of iterations between each flush
+     * @throws NullPointerException if procedure is null
      */
     void each(Procedure<? super T> procedure, int batchSize);
+    
+    /**
+     * Performs an operation on each element of type T and call the given batch procedure
+     * everytime the batch size is hit.
+     * 
+     * <p>
+     *   Note: {@link Batch} supports several reusable {@link Procedure}s for the third parameter.
+     * </p>
+     * 
+     * @since 2.3
+     * @param procedure the command which will be called with each instance of T
+     * @param batchSize the number of iterations between each flush
+     * @param batchProcedure the procedure which is called every time the batch size is hit
+     * @throws NullPointerException if procedure or batchProcedure is null
+     */
+    void each(Procedure<? super T> procedure, int batchSize, Procedure<? super EntityManager> batchProcedure);
     
     /**
      * Deletes an entity.
