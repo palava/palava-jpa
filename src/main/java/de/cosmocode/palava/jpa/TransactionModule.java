@@ -18,9 +18,10 @@ package de.cosmocode.palava.jpa;
 
 import de.cosmocode.palava.ipc.Commands;
 import de.cosmocode.palava.ipc.FilterModule;
+import de.cosmocode.palava.ipc.IpcCommand;
 
 /**
- * Binds the {@link TransactionFilter} class to all {@linkplain Command commands}
+ * Binds the {@link TransactionFilter} class to all {@link IpcCommand commands}
  * annotated with {@link Transactional}.
  *
  * @author Willi Schoenborn

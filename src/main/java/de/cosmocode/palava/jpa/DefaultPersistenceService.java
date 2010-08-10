@@ -96,7 +96,8 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
     }
 
     @Override
-    public EntityManager createEntityManager(@SuppressWarnings("rawtypes") Map map) {
+    @SuppressWarnings("unchecked")
+    public EntityManager createEntityManager(Map map) {
         final EntityManager entityManager = factory.createEntityManager(map);
         if (flushModeType != null) {
             LOG.trace("Setting FlushMode of {} to {}", entityManager, flushModeType.name());

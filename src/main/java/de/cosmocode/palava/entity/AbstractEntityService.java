@@ -26,14 +26,13 @@ import com.google.common.base.Preconditions;
 import de.cosmocode.collections.Procedure;
 import de.cosmocode.palava.jpa.Transactional;
 import de.cosmocode.palava.model.base.Copyable;
-import de.cosmocode.palava.model.base.EntityBase;
 
 /**
  * Abstract base implementation of the {@link EntityService} interface.
  *
  * <p>
  *   <strong>Note</strong>: This implementation does not provide a meaningful
- *   {@link EntityService#delete(EntityBase)} method. Decisions about deleting
+ *   {@link EntityService#delete(Object)} method. Decisions about deleting
  *   or hiding entites are left to sub-classes. Create and update are marked
  *   with @Transactional to use or create transactions for database actions.
  * </p>

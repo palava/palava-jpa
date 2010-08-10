@@ -57,7 +57,8 @@ public abstract class ForwardingEntityManager extends ForwardingObject implement
     }
 
     @Override
-    public Query createNativeQuery(String sqlString, @SuppressWarnings("rawtypes") Class resultClass) {
+    @SuppressWarnings("unchecked")
+    public Query createNativeQuery(String sqlString, Class resultClass) {
         return delegate().createNativeQuery(sqlString, resultClass);
     }
 
