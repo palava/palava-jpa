@@ -16,11 +16,18 @@
 
 package de.cosmocode.palava.jpa;
 
+import java.util.Map;
+
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.metamodel.Metamodel;
 
 import com.google.common.collect.ForwardingObject;
 
@@ -35,7 +42,97 @@ public abstract class ForwardingEntityManager extends ForwardingObject implement
 
     @Override
     protected abstract EntityManager delegate();
-    
+
+    @Override
+    public <T> T find(Class<T> entityClass, Object primaryKey, Map<String, Object> properties) {
+        return delegate().find(entityClass, primaryKey, properties);
+    }
+
+    @Override
+    public <T> T find(Class<T> entityClass, Object primaryKey, LockModeType lockMode) {
+        return delegate().find(entityClass, primaryKey, lockMode);
+    }
+
+    @Override
+    public <T> T find(Class<T> entityClass, Object primaryKey, LockModeType lockMode, Map<String, Object> properties) {
+        return delegate().find(entityClass, primaryKey, lockMode, properties);
+    }
+
+    @Override
+    public void lock(Object entity, LockModeType lockMode, Map<String, Object> properties) {
+        delegate().lock(entity, lockMode, properties);
+    }
+
+    @Override
+    public void refresh(Object entity, Map<String, Object> properties) {
+        delegate().refresh(entity, properties);
+    }
+
+    @Override
+    public void refresh(Object entity, LockModeType lockMode) {
+        delegate().refresh(entity, lockMode);
+    }
+
+    @Override
+    public void refresh(Object entity, LockModeType lockMode, Map<String, Object> properties) {
+        delegate().refresh(entity, lockMode, properties);
+    }
+
+    @Override
+    public void detach(Object entity) {
+        delegate().detach(entity);
+    }
+
+    @Override
+    public LockModeType getLockMode(Object entity) {
+        return delegate().getLockMode(entity);
+    }
+
+    @Override
+    public void setProperty(String propertyName, Object value) {
+        delegate().setProperty(propertyName, value);
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return delegate().getProperties();
+    }
+
+    @Override
+    public <T> TypedQuery<T> createQuery(CriteriaQuery<T> criteriaQuery) {
+        return delegate().createQuery(criteriaQuery);
+    }
+
+    @Override
+    public <T> TypedQuery<T> createQuery(String qlString, Class<T> resultClass) {
+        return delegate().createQuery(qlString, resultClass);
+    }
+
+    @Override
+    public <T> TypedQuery<T> createNamedQuery(String name, Class<T> resultClass) {
+        return delegate().createNamedQuery(name, resultClass);
+    }
+
+    @Override
+    public <T> T unwrap(Class<T> cls) {
+        return delegate().unwrap(cls);
+    }
+
+    @Override
+    public EntityManagerFactory getEntityManagerFactory() {
+        return delegate().getEntityManagerFactory();
+    }
+
+    @Override
+    public CriteriaBuilder getCriteriaBuilder() {
+        return delegate().getCriteriaBuilder();
+    }
+
+    @Override
+    public Metamodel getMetamodel() {
+        return delegate().getMetamodel();
+    }
+
     @Override
     public void clear() {
         delegate().clear();
@@ -57,8 +154,7 @@ public abstract class ForwardingEntityManager extends ForwardingObject implement
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Query createNativeQuery(String sqlString, Class resultClass) {
+    public Query createNativeQuery(String sqlString, @SuppressWarnings("rawtypes") Class resultClass) {
         return delegate().createNativeQuery(sqlString, resultClass);
     }
 
@@ -146,5 +242,5 @@ public abstract class ForwardingEntityManager extends ForwardingObject implement
     public void setFlushMode(FlushModeType flushMode) {
         delegate().setFlushMode(flushMode);
     }
-    
+
 }

@@ -19,10 +19,14 @@ package de.cosmocode.palava.jpa;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.persistence.Cache;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceUnitUtil;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.metamodel.Metamodel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,14 +100,38 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public EntityManager createEntityManager(Map map) {
+    public EntityManager createEntityManager(@SuppressWarnings("rawtypes") Map map) {
         final EntityManager entityManager = factory.createEntityManager(map);
         if (flushModeType != null) {
             LOG.trace("Setting FlushMode of {} to {}", entityManager, flushModeType.name());
             entityManager.setFlushMode(flushModeType);
         }
         return entityManager;
+    }
+
+    @Override
+    public CriteriaBuilder getCriteriaBuilder() {
+        return factory.getCriteriaBuilder();
+    }
+
+    @Override
+    public Metamodel getMetamodel() {
+        return factory.getMetamodel();
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return factory.getProperties();
+    }
+
+    @Override
+    public Cache getCache() {
+        return factory.getCache();
+    }
+
+    @Override
+    public PersistenceUnitUtil getPersistenceUnitUtil() {
+        return factory.getPersistenceUnitUtil();
     }
 
     @Override
