@@ -108,6 +108,11 @@ final class DefaultPersistenceService implements PersistenceService, Initializab
         }
         return entityManager;
     }
+    
+    @Override
+    public EntityManager get() {
+        return new DestroyableEntityManager(createEntityManager());
+    }
 
     @Override
     public CriteriaBuilder getCriteriaBuilder() {

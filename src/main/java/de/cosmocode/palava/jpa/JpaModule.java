@@ -16,16 +16,16 @@
 
 package de.cosmocode.palava.jpa;
 
+import java.lang.annotation.Annotation;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Provider;
-import com.google.inject.Provides;
 import com.google.inject.Singleton;
 
-import de.cosmocode.palava.ipc.IpcConnectionScoped;
 import de.cosmocode.palava.scope.UnitOfWork;
 
 /**
@@ -40,18 +40,20 @@ public final class JpaModule implements Module {
     public void configure(Binder binder) {
         binder.bind(PersistenceService.class).to(DefaultPersistenceService.class).in(Singleton.class);
         binder.bind(EntityManagerFactory.class).to(PersistenceService.class).in(Singleton.class);
+        binder.bind(EntityManager.class).toProvider(PersistenceService.class).in(UnitOfWork.class);
     }
     
     /**
-     * Provides an {@link IpcConnectionScoped} {@link EntityManager} annotated with {@link UnitOfWork}.
+     * Creates a new {@link Module} which does the same as {@link JpaModule} but uses the
+     * specified binding annotation.
      * 
-     * @param service the required {@link PersistenceService} which produces {@link EntityManager}.
-     * @return a {@link DestroyableEntityManager}
+     * @since 3.1
+     * @param annotation the binding annotation
+     * @return a new module
+     * @throws NullPointerException if annotation is null
      */
-    @Provides
-    @UnitOfWork
-    EntityManager getEntityManager(PersistenceService service) {
-        return new DestroyableEntityManager(service.createEntityManager()); 
+    public static Module annotatedWith(Class<? extends Annotation> annotation) {
+        return new AnnotatedJpaModule(annotation);
     }
 
 }
