@@ -17,24 +17,41 @@
 package de.cosmocode.palava.jpa;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Provider;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+
+import de.cosmocode.palava.ipc.IpcConnectionScoped;
+import de.cosmocode.palava.scope.UnitOfWork;
 
 /**
  * {@link Module} which binds the {@link PersistenceService} interface
  * to its default implementation and registers as a {@link Provider} for {@link EntityManager}s.
  *
- * @deprecated use {@link JpaModule}
  * @author Willi Schoenborn
  */
-@Deprecated
-public final class PersistenceModule implements Module {
+public final class JpaModule implements Module {
 
     @Override
     public void configure(Binder binder) {
-        binder.install(new JpaModule());
+        binder.bind(PersistenceService.class).to(DefaultPersistenceService.class).in(Singleton.class);
+        binder.bind(EntityManagerFactory.class).to(PersistenceService.class).in(Singleton.class);
     }
     
+    /**
+     * Provides an {@link IpcConnectionScoped} {@link EntityManager} annotated with {@link UnitOfWork}.
+     * 
+     * @param service the required {@link PersistenceService} which produces {@link EntityManager}.
+     * @return a {@link DestroyableEntityManager}
+     */
+    @Provides
+    @UnitOfWork
+    EntityManager getEntityManager(PersistenceService service) {
+        return new DestroyableEntityManager(service.createEntityManager()); 
+    }
+
 }
