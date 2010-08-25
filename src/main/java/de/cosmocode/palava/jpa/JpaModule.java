@@ -26,6 +26,7 @@ import com.google.inject.Module;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import de.cosmocode.palava.core.inject.RebindModule;
 import de.cosmocode.palava.scope.UnitOfWork;
 
 /**
@@ -47,13 +48,29 @@ public final class JpaModule implements Module {
      * Creates a new {@link Module} which does the same as {@link JpaModule} but uses the
      * specified binding annotation.
      * 
+     * @deprecated use {@link #annotatedWith(Class, String)}
      * @since 3.1
      * @param annotation the binding annotation
      * @return a new module
      * @throws NullPointerException if annotation is null
      */
+    @Deprecated
     public static Module annotatedWith(Class<? extends Annotation> annotation) {
         return new AnnotatedJpaModule(annotation);
+    }
+
+    /**
+     * Creates a new {@link Module} which does the same as {@link JpaModule} but uses the
+     * specified binding annotation.
+     * 
+     * @since 3.2
+     * @param annotation the binding annotation
+     * @param prefix the config prefix
+     * @return a new module
+     * @throws NullPointerException if annotation is null
+     */
+    public static RebindModule annotatedWith(Class<? extends Annotation> annotation, String prefix) {
+        return new AnnptatedRebindingJpaModule(annotation, prefix);
     }
 
 }
