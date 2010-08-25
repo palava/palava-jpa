@@ -37,12 +37,12 @@ import de.cosmocode.palava.scope.UnitOfWork;
  * @since 3.2
  * @author Willi Schoenborn
  */
-public final class AnnptatedRebindingJpaModule extends AbstractRebindModule {
+public final class AnnotatedRebindingJpaModule extends AbstractRebindModule {
 
     private final Class<? extends Annotation> annotation;
     private final Config config;
     
-    public AnnptatedRebindingJpaModule(Class<? extends Annotation> annotation, String prefix) {
+    public AnnotatedRebindingJpaModule(Class<? extends Annotation> annotation, String prefix) {
         this.annotation = Preconditions.checkNotNull(annotation, "Annotation");
         this.config = new Config(prefix);
     }

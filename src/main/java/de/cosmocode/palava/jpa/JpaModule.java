@@ -70,7 +70,7 @@ public final class JpaModule implements Module {
      * @throws NullPointerException if annotation is null
      */
     public static RebindModule annotatedWith(Class<? extends Annotation> annotation, String prefix) {
-        return new AnnptatedRebindingJpaModule(annotation, prefix);
+        return new AnnotatedRebindingJpaModule(annotation, prefix);
     }
 
 }

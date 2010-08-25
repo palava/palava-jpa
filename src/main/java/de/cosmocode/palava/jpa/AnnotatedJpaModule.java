@@ -33,7 +33,7 @@ import de.cosmocode.palava.scope.UnitOfWork;
  * A variation of the {@link JpaModule} which allows binding using an
  * annotation.
  *
- * @deprecated replaced by {@link AnnptatedRebindingJpaModule}
+ * @deprecated replaced by {@link AnnotatedRebindingJpaModule}
  * @since 3.1
  * @author Willi Schoenborn
  */
