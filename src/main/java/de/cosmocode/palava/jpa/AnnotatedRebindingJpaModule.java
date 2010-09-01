@@ -64,7 +64,7 @@ public final class AnnotatedRebindingJpaModule extends AbstractRebindModule {
         bind(PersistenceService.class).annotatedWith(annotation).
             to(DefaultPersistenceService.class).in(Singleton.class);
         bind(EntityManagerFactory.class).annotatedWith(annotation).
-            to(PersistenceService.class).in(Singleton.class);
+            to(Key.get(PersistenceService.class, annotation)).in(Singleton.class);
         bind(EntityManager.class).annotatedWith(annotation).
             toProvider(Key.get(PersistenceService.class, annotation)).in(UnitOfWork.class);
     }

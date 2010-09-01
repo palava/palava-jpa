@@ -51,7 +51,7 @@ final class AnnotatedJpaModule implements Module {
         binder.bind(PersistenceService.class).annotatedWith(annotation).
             to(DefaultPersistenceService.class).in(Singleton.class);
         binder.bind(EntityManagerFactory.class).annotatedWith(annotation).
-            to(PersistenceService.class).in(Singleton.class);
+            to(Key.get(PersistenceService.class, annotation)).in(Singleton.class);
         binder.bind(EntityManager.class).annotatedWith(annotation).
             toProvider(Key.get(PersistenceService.class, annotation)).in(UnitOfWork.class);
         
