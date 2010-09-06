@@ -35,6 +35,16 @@ import de.cosmocode.palava.jpa.Transactional;
  * @param <T> the generic entity type
  */
 public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntityService<T> {
+    
+    private final Supplier<TypedQuery<T>> supplier = new Supplier<TypedQuery<T>>() {
+        
+        @Override
+        public TypedQuery<T> get() {
+            final String jpql = "from " + entityClass().getSimpleName();
+            return entityManager().createQuery(jpql, entityClass());
+        }
+        
+    };
 
     /**
      * Provides an {@link EntityManager} this implementation uses to do it's
@@ -100,26 +110,15 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
         return list(entityManager().createNamedQuery(queryName), parameters);
     }
 
-    private TypedQuery<T> all() {
-        return entityManager().createQuery("from " + entityClass().getSimpleName(), entityClass());
-    }
-    
     @Transactional
     @Override
     public List<T> iterate() {
-        return all().getResultList();
+        return supplier.get().getResultList();
     }
 
     @Override
     public Iterable<T> iterate(int batchSize) {
-        return new PreloadingIterable<T>(new Supplier<TypedQuery<T>>() {
-            
-            @Override
-            public TypedQuery<T> get() {
-                return all();
-            }
-            
-        }, batchSize);
+        return new PreloadingIterable<T>(supplier, batchSize);
     }
     
     @Transactional
