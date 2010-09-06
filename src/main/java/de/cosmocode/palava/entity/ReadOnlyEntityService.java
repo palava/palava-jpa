@@ -117,6 +117,7 @@ public interface ReadOnlyEntityService<T> {
      * 
      * @param batchSize the amount of preloaded elements
      * @return an {@link Iterable} of {@link UnmodifiableIterator}s over all elements of T
+     * @throws IllegalArgumentException if batchSize is not positive
      */
     Iterable<T> iterate(int batchSize);
     

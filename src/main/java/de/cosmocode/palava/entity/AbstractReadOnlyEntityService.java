@@ -16,16 +16,14 @@
 
 package de.cosmocode.palava.entity;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
-import com.google.common.collect.Iterators;
-import com.google.common.collect.UnmodifiableIterator;
+import com.google.common.base.Supplier;
 import com.google.inject.Provider;
 
 import de.cosmocode.palava.jpa.Transactional;
@@ -102,74 +100,28 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
         return list(entityManager().createNamedQuery(queryName), parameters);
     }
 
+    private TypedQuery<T> all() {
+        return entityManager().createQuery("from " + entityClass().getSimpleName(), entityClass());
+    }
+    
     @Transactional
     @Override
     public List<T> iterate() {
-        final String query = String.format("from %s", entityClass().getSimpleName());
-        return list(entityManager().createQuery(query));
+        return all().getResultList();
     }
 
-    @Transactional
     @Override
-    public Iterable<T> iterate(final int batchSize) {
-        return new Iterable<T>() {
+    public Iterable<T> iterate(int batchSize) {
+        return new PreloadingIterable<T>(new Supplier<TypedQuery<T>>() {
             
             @Override
-            public Iterator<T> iterator() {
-                return new PreloadingIterator(batchSize);
+            public TypedQuery<T> get() {
+                return all();
             }
             
-        };
+        }, batchSize);
     }
     
-    /**
-     * A preloading iterator which uses a configurable batch size.
-     *
-     * @author Willi Schoenborn
-     */
-    private final class PreloadingIterator extends UnmodifiableIterator<T> {
-
-        private final int batchSize;
-        private final Query query;
-        
-        private int nextIndex;
-        
-        private Iterator<T> current = Iterators.emptyIterator();
-        private Iterator<T> next;
-
-        public PreloadingIterator(int batchSize) {
-            this.batchSize = batchSize;
-            final String jpql = String.format("from %s", entityClass().getSimpleName());
-            this.query = entityManager().createQuery(jpql).setMaxResults(batchSize);
-            preload();
-        }
-        
-        private void preload() {
-            query.setFirstResult(nextIndex);
-            next = list(query).iterator();
-            nextIndex += batchSize;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return current.hasNext() || next.hasNext();
-        }
-       
-        @Override
-        public T next() {
-            if (current.hasNext()) {
-                return current.next();
-            } else if (next.hasNext()) {
-                current = next;
-                preload();
-                return current.next();
-            } else {
-                throw new NoSuchElementException();
-            }
-        }
-        
-    }
-
     @Transactional
     @Override
     @SuppressWarnings("unchecked")

@@ -56,6 +56,7 @@ public abstract class AbstractEntityService<T> extends AbstractReadOnlyEntitySer
     @Transactional
     @Override
     public T update(T entity) {
+        LOG.debug("Updating {}", entity);
         return entityManager().merge(entity);
     }
 
@@ -64,6 +65,7 @@ public abstract class AbstractEntityService<T> extends AbstractReadOnlyEntitySer
     public void each(Procedure<? super T> procedure) {
         Preconditions.checkNotNull(procedure, "Procedure");
         for (T entity : iterate()) {
+            LOG.trace("Applying {} to {}", procedure, entity);
             procedure.apply(entity);
         }
     }
@@ -81,8 +83,8 @@ public abstract class AbstractEntityService<T> extends AbstractReadOnlyEntitySer
         Preconditions.checkNotNull(batchProcedure, "BatchProcedure");
         int i = 1;
         for (T entity : iterate(batchSize)) {
+            LOG.trace("Applying {} to {}", procedure, entity);
             procedure.apply(entity);
-            // flush every 'batchSize' elements
             if (i++ % batchSize == 0) {
                 batchProcedure.apply(entityManager());
             }
@@ -93,6 +95,7 @@ public abstract class AbstractEntityService<T> extends AbstractReadOnlyEntitySer
     @Transactional
     @Override
     public <C extends Copyable<T>> T createCopy(C entity) {
+        LOG.debug("Copying {}", entity);
         return create(entity.copy());
     }
 
