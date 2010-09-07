@@ -82,7 +82,4 @@ public enum Batch implements Procedure<EntityManager> {
         
     };
     
-    @Override
-    public abstract void apply(EntityManager input);
-    
 }
