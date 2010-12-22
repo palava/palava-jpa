@@ -41,7 +41,7 @@ public interface EntityBase extends Renderable {
         @Override
         public Long apply(EntityBase from) {
             return from.getId();
-        };
+        }
         
     });
     
