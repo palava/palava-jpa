@@ -110,6 +110,11 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
         return list(entityManager().createNamedQuery(queryName), parameters);
     }
 
+    /**
+     * Creates a typed query using {@link #entityClass()}. This is like a <code>SELECT * FROM T</code>.
+     *
+     * @return a typed query without any restrictions
+     */
     TypedQuery<T> getTypedQuery() {
         final CriteriaBuilder builder = entityManager().getCriteriaBuilder();
         final CriteriaQuery<T> criteria = builder.createQuery(entityClass());
