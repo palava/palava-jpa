@@ -70,6 +70,7 @@ public interface ReadOnlyEntityService<T> {
     /**
      * Retrievs an entity from the database.
      *
+     * @since 3.3
      * @param query the query being executed
      * @param parameters the parameters the query needs
      * @return the single entity found using the given query
@@ -114,6 +115,7 @@ public interface ReadOnlyEntityService<T> {
     /**
      * Retrievs a list of entities from the database.
      *
+     * @since 3.3
      * @param query the query being executed
      * @param parameters the parameters the query needs
      * @return the single entity found using the given query
@@ -148,6 +150,7 @@ public interface ReadOnlyEntityService<T> {
     /**
      * Iterate s through all entities of Type T matching the given entity using the specified batch size.
      *
+     * @since 3.3
      * @param query the query being used to fetch entities
      * @param batchSize the amount of preloaded entities
      * @return an {@link Iterable} of {@link UnmodifiableIterator}s over all elements of T
@@ -170,6 +173,7 @@ public interface ReadOnlyEntityService<T> {
     /**
      * Retrieves a projection, a single column, single row value.
      *
+     * @since 3.3
      * @param <P> the generic value type
      * @param query the query being executed
      * @param parameters the parameters the query needs
@@ -222,6 +226,7 @@ public interface ReadOnlyEntityService<T> {
     /**
      * Retrieves a list of projections, single column, multiple row values.
      *
+     * @since 3.3
      * @param <P> the generic value type
      * @param query the query being executed
      * @param parameters the parameters the query needs
@@ -274,6 +279,7 @@ public interface ReadOnlyEntityService<T> {
      * Prepares the specified query with the given parameters by calling
      * {@link Query#setParameter(int, Object)} for every parameter.
      *
+     * @since 3.3
      * @param <X> generic query parameter
      * @param query the query being prepared
      * @param parameters the parameters the query requires

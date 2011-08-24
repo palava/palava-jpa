@@ -110,7 +110,7 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
         return list(entityManager().createNamedQuery(queryName), parameters);
     }
 
-    private TypedQuery<T> getTypedQuery() {
+    TypedQuery<T> getTypedQuery() {
         final CriteriaBuilder builder = entityManager().getCriteriaBuilder();
         final CriteriaQuery<T> criteria = builder.createQuery(entityClass());
         return entityManager().createQuery(criteria);

@@ -16,7 +16,9 @@
 
 package de.cosmocode.palava.entity;
 
+import javax.management.Query;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,8 +65,14 @@ public abstract class AbstractEntityService<T> extends AbstractReadOnlyEntitySer
     @Transactional
     @Override
     public void each(Procedure<? super T> procedure) {
+        each(getTypedQuery(), procedure);
+    }
+
+    @Transactional
+    @Override
+    public void each(TypedQuery<T> query, Procedure<? super T> procedure) {
         Preconditions.checkNotNull(procedure, "Procedure");
-        for (T entity : iterate()) {
+        for (T entity : list(query)) {
             LOG.trace("Applying {} to {}", procedure, entity);
             procedure.apply(entity);
         }
@@ -73,23 +81,35 @@ public abstract class AbstractEntityService<T> extends AbstractReadOnlyEntitySer
     @Transactional
     @Override
     public void each(Procedure<? super T> procedure, int batchSize) {
-        each(procedure, batchSize, Batch.NOOP);
+        each(getTypedQuery(), procedure, batchSize);
+    }
+
+    @Transactional
+    @Override
+    public void each(TypedQuery<T> query, Procedure<? super T> procedure, int batchSize) {
+        each(query, procedure, batchSize, Batch.NOOP);
     }
 
     @Transactional
     @Override
     public void each(Procedure<? super T> procedure, int batchSize, Procedure<? super EntityManager> batchProcedure) {
+        each(getTypedQuery(), procedure, batchSize, batchProcedure);
+    }
+
+    @Transactional
+    @Override
+    public void each(TypedQuery<T> query, Procedure<? super T> procedure, int batchSize,
+        Procedure<? super EntityManager> batchProcedure) {
         Preconditions.checkNotNull(procedure, "Procedure");
         Preconditions.checkNotNull(batchProcedure, "BatchProcedure");
         int i = 1;
-        for (T entity : iterate(batchSize)) {
+        for (T entity : iterate(query, batchSize)) {
             LOG.trace("Applying {} to {}", procedure, entity);
             procedure.apply(entity);
             if (i++ % batchSize == 0) {
                 batchProcedure.apply(entityManager());
             }
         }
-        
     }
 
     @Transactional
