@@ -16,15 +16,15 @@
 
 package de.cosmocode.palava.entity;
 
-import java.util.List;
+import com.google.common.collect.UnmodifiableIterator;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
-
-import com.google.common.collect.UnmodifiableIterator;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 /**
  * A service which allows readonly-operations on entites of a specific type.
@@ -56,14 +56,27 @@ public interface ReadOnlyEntityService<T> {
     
     /**
      * Retrievs an entity from the database.
-     * 
+     *
+     * @deprecated use {@link #read(javax.persistence.TypedQuery, Object...)}
      * @param query the query being executed
      * @param parameters the parameters the query needs
      * @return the single entity found using the given query
      * @throws NoResultException if there is no matching entity
      * @throws NonUniqueResultException if there is more than one matching entity
      */
+    @Deprecated
     T read(Query query, Object... parameters);
+
+    /**
+     * Retrievs an entity from the database.
+     *
+     * @param query the query being executed
+     * @param parameters the parameters the query needs
+     * @return the single entity found using the given query
+     * @throws NoResultException if there is no matching entity
+     * @throws NonUniqueResultException if there is more than one matching entity
+     */
+    T read(TypedQuery<T> query, Object... parameters);
 
     /**
      * Retrievs an entity from the database.
@@ -89,12 +102,23 @@ public interface ReadOnlyEntityService<T> {
 
     /**
      * Retrievs a list of entities from the database.
-     * 
+     *
+     * @deprecated use {@link #list(javax.persistence.TypedQuery, Object...)}
      * @param query the query being executed
      * @param parameters the parameters the query needs
      * @return the single entity found using the given query
      */
+    @Deprecated
     List<T> list(Query query, Object... parameters);
+
+    /**
+     * Retrievs a list of entities from the database.
+     *
+     * @param query the query being executed
+     * @param parameters the parameters the query needs
+     * @return the single entity found using the given query
+     */
+    List<T> list(TypedQuery<T> query, Object... parameters);
 
     /**
      * Retrievs a list of entities from the database.
@@ -113,23 +137,45 @@ public interface ReadOnlyEntityService<T> {
     List<T> iterate();
 
     /**
-     * Iteraters through all entities of type T using the specified batch size.
+     * Iterates through all entities of type T using the specified batch size.
      * 
      * @param batchSize the amount of preloaded elements
      * @return an {@link Iterable} of {@link UnmodifiableIterator}s over all elements of T
      * @throws IllegalArgumentException if batchSize is not positive
      */
     Iterable<T> iterate(int batchSize);
+
+    /**
+     * Iterate s through all entities of Type T matching the given entity using the specified batch size.
+     *
+     * @param query the query being used to fetch entities
+     * @param batchSize the amount of preloaded entities
+     * @return an {@link Iterable} of {@link UnmodifiableIterator}s over all elements of T
+     * @throws IllegalArgumentException if batchSize is not positive
+     */
+    Iterable<T> iterate(TypedQuery<T> query, int batchSize);
     
     /**
      * Retrieves a projection, a single column, single row value.
-     * 
+     *
+     * @deprecated use {@link #projection(javax.persistence.TypedQuery, Object...)}
      * @param <P> the generic value type
      * @param query the query being executed
      * @param parameters the parameters the query needs
      * @return the value found by the given query
      */
+    @Deprecated
     <P> P projection(Query query, Object... parameters);
+
+    /**
+     * Retrieves a projection, a single column, single row value.
+     *
+     * @param <P> the generic value type
+     * @param query the query being executed
+     * @param parameters the parameters the query needs
+     * @return the value found by the given query
+     */
+    <P> P projection(TypedQuery<P> query, Object... parameters);
     
     /**
      * Retrieves a projection, a single column, single row value.
@@ -163,13 +209,25 @@ public interface ReadOnlyEntityService<T> {
     
     /**
      * Retrieves a list of projections, single column, multiple row values.
-     * 
+     *
+     * @deprecated use {@link #projectionList(javax.persistence.TypedQuery, Object...)}
      * @param <P> the generic value type
      * @param query the query being executed
      * @param parameters the parameters the query needs
      * @return the values found by the given query
      */
+    @Deprecated
     <P> List<P> projectionList(Query query, Object... parameters);
+
+    /**
+     * Retrieves a list of projections, single column, multiple row values.
+     *
+     * @param <P> the generic value type
+     * @param query the query being executed
+     * @param parameters the parameters the query needs
+     * @return the values found by the given query
+     */
+    <P> List<P> projectionList(TypedQuery<P> query, Object... parameters);
 
     /**
      * Retrieves a list of projections, single column, multiple row values.
@@ -205,30 +263,32 @@ public interface ReadOnlyEntityService<T> {
      * Prepares the specified query with the given parameters by calling
      * {@link Query#setParameter(int, Object)} for every parameter.
      * 
-     * @deprecated Clients should not use this method directly as it reveals implementation details.
-     * Scheduled for removal without substitution.
-     * 
      * @param query the query being prepared
      * @param parameters the parameters the query requires
      * @return the specified query
      * @throws UnsupportedOperationException if the implementation does not support this feature
      */
-    @Deprecated
     Query prepare(Query query, Object... parameters);
+
+    /**
+     * Prepares the specified query with the given parameters by calling
+     * {@link Query#setParameter(int, Object)} for every parameter.
+     *
+     * @param <X> generic query parameter
+     * @param query the query being prepared
+     * @param parameters the parameters the query requires
+     * @return the specified query
+     */
+    <X> TypedQuery<X> prepare(TypedQuery<X> query, Object... parameters);
     
     /**
      * Prepares the query associated with the specified name with the given parameters
      * by calling {@link Query#setParameter(int, Object)} for every parameter.
      * 
-     * @deprecated Clients should not use this method directly as it reveals implementation details.
-     * Scheduled for removal without substitution. 
-     * 
      * @param queryName the name of the query being prepared
      * @param parameters the parameters the query requires
      * @return the prepared query
-     * @throws UnsupportedOperationException if the implementation does not support this feature
      */
-    @Deprecated
-    Query prepare(String queryName, Object... parameters);
+    TypedQuery<T> prepare(String queryName, Object... parameters);
 
 }

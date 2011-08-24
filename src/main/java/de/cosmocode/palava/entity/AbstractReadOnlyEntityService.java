@@ -16,17 +16,16 @@
 
 package de.cosmocode.palava.entity;
 
-import java.util.List;
+import com.google.inject.Provider;
+import de.cosmocode.palava.jpa.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-
-import com.google.common.base.Supplier;
-import com.google.inject.Provider;
-
-import de.cosmocode.palava.jpa.Transactional;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import java.util.List;
 
 /**
  * Abstract skeleton implementation of the {@link ReadOnlyEntityService} interface.
@@ -35,16 +34,6 @@ import de.cosmocode.palava.jpa.Transactional;
  * @param <T> the generic entity type
  */
 public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntityService<T> {
-    
-    private final Supplier<TypedQuery<T>> supplier = new Supplier<TypedQuery<T>>() {
-        
-        @Override
-        public TypedQuery<T> get() {
-            final String jpql = "from " + entityClass().getSimpleName();
-            return entityManager().createQuery(jpql, entityClass());
-        }
-        
-    };
 
     /**
      * Provides an {@link EntityManager} this implementation uses to do it's
@@ -85,6 +74,11 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
         return (T) prepare(query, parameters).getSingleResult();
     }
 
+    @Override
+    public T read(TypedQuery<T> query, Object... parameters) {
+        return prepare(query, parameters).getSingleResult();
+    }
+
     @Transactional
     @Override
     public T read(String queryName, Object... parameters) {
@@ -106,21 +100,39 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
 
     @Transactional
     @Override
+    public List<T> list(TypedQuery<T> query, Object... parameters) {
+        return prepare(query, parameters).getResultList();
+    }
+
+    @Transactional
+    @Override
     public List<T> list(String queryName, Object... parameters) {
         return list(entityManager().createNamedQuery(queryName), parameters);
+    }
+
+    private TypedQuery<T> getTypedQuery() {
+        final CriteriaBuilder builder = entityManager().getCriteriaBuilder();
+        final CriteriaQuery<T> criteria = builder.createQuery(entityClass());
+        return entityManager().createQuery(criteria);
     }
 
     @Transactional
     @Override
     public List<T> iterate() {
-        return supplier.get().getResultList();
+        return getTypedQuery().getResultList();
     }
 
     @Override
     public Iterable<T> iterate(int batchSize) {
-        return new PreloadingIterable<T>(supplier, batchSize);
+        final TypedQuery<T> query = getTypedQuery();
+        return iterate(query, batchSize);
     }
-    
+
+    @Override
+    public Iterable<T> iterate(TypedQuery<T> query, int batchSize) {
+        return new PreloadingIterable<T>(query, batchSize);
+    }
+
     @Transactional
     @Override
     @SuppressWarnings("unchecked")
@@ -128,10 +140,15 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
         return (P) prepare(query, parameters).getSingleResult();
     }
 
+    @Override
+    public <P> P projection(TypedQuery<P> query, Object... parameters) {
+        return prepare(query, parameters).getSingleResult();
+    }
+
     @Transactional
     @Override
     public <P> P projection(String queryName, Object... parameters) {
-        return this.<P>projection(entityManager().createNamedQuery(queryName), parameters);
+        return projection(entityManager().createNamedQuery(queryName), parameters);
     }
 
     @Transactional
@@ -144,13 +161,18 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
     @Transactional
     @Override
     public <P> P[] projections(String queryName, Object... parameters) {
-        return this.<P>projections(entityManager().createNamedQuery(queryName), parameters);
+        return projections(entityManager().createNamedQuery(queryName), parameters);
     }
 
     @Transactional
     @Override
     @SuppressWarnings("unchecked")
     public <P> List<P> projectionList(Query query, Object... parameters) {
+        return prepare(query, parameters).getResultList();
+    }
+
+    @Override
+    public <P> List<P> projectionList(TypedQuery<P> query, Object... parameters) {
         return prepare(query, parameters).getResultList();
     }
 
@@ -172,18 +194,28 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
     public <P> List<P[]> projectionsList(String queryName, Object... parameters) {
         return projectionsList(entityManager().createNamedQuery(queryName), parameters);
     }
-    
-    @Override
-    public Query prepare(Query query, Object... parameters) {
+
+    private void doPrepare(Query query, Object[] parameters) {
         for (int i = 0; i < parameters.length; i++) {
             query.setParameter(i + 1, parameters[i]);
         }
+    }
+
+    @Override
+    public Query prepare(Query query, Object... parameters) {
+        doPrepare(query, parameters);
         return query;
     }
-    
+
     @Override
-    public Query prepare(String queryName, Object... parameters) {
-        return prepare(entityManager().createNamedQuery(queryName), parameters);
+    public <X> TypedQuery<X> prepare(TypedQuery<X> query, Object... parameters) {
+        doPrepare(query, parameters);
+        return query;
+    }
+
+    @Override
+    public TypedQuery<T> prepare(String queryName, Object... parameters) {
+        return prepare(entityManager().createNamedQuery(queryName, entityClass()), parameters);
     }
     
 }

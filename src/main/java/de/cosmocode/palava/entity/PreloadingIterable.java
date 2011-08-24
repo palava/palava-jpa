@@ -32,18 +32,18 @@ import com.google.common.base.Supplier;
  */
 final class PreloadingIterable<T> implements Iterable<T> {
     
-    private final Supplier<TypedQuery<T>> supplier;
+    private final TypedQuery<T> query;
     private final int batchSize;
     
-    public PreloadingIterable(Supplier<TypedQuery<T>> supplier, int batchSize) {
-        this.supplier = Preconditions.checkNotNull(supplier, "Supplier");
+    public PreloadingIterable(TypedQuery<T> query, int batchSize) {
+        this.query = Preconditions.checkNotNull(query, "Query");
         Preconditions.checkArgument(batchSize > 0, "Batch size must be positive");
         this.batchSize = batchSize;
     }
     
     @Override
     public Iterator<T> iterator() {
-        return new PreloadingIterator<T>(supplier.get(), batchSize);
+        return new PreloadingIterator<T>(query, batchSize);
     }
     
 }
