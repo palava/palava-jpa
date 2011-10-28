@@ -16,12 +16,12 @@
 
 package de.cosmocode.palava.entity;
 
+import de.cosmocode.collections.Procedure;
+import de.cosmocode.palava.model.base.Copyable;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
-
-import de.cosmocode.collections.Procedure;
-import de.cosmocode.palava.model.base.Copyable;
 
 /**
  * A service which allows crud-operations on entites of a specific type.
@@ -60,6 +60,15 @@ public interface EntityService<T> extends ReadOnlyEntityService<T> {
      * Performs an operation on each element of type T matching the specified query.
      *
      * @since 3.4
+     * @param queryName the query name being used
+     * @param procedure the command which will be called with each instance of T
+     */
+    void each(String queryName, Procedure<? super T> procedure);
+
+    /**
+     * Performs an operation on each element of type T matching the specified query.
+     *
+     * @since 3.4
      * @param query the query being used
      * @param procedure the command which will be called with each instance of T
      */
@@ -78,13 +87,24 @@ public interface EntityService<T> extends ReadOnlyEntityService<T> {
      * Performs an operation on each element of type T matching the specified query.
      *
      * @since 3.4
+     * @param queryName the query name being used
+     * @param procedure the command which will be called with each instance of T
+     * @param batchSize the number of iterations between each flush
+     * @throws NullPointerException if procedure is null
+     */
+    void each(String queryName, Procedure<? super T> procedure, int batchSize);
+
+    /**
+     * Performs an operation on each element of type T matching the specified query.
+     *
+     * @since 3.4
      * @param query the query being used
      * @param procedure the command which will be called with each instance of T
      * @param batchSize the number of iterations between each flush
      * @throws NullPointerException if procedure is null
      */
     void each(TypedQuery<T> query, Procedure<? super T> procedure, int batchSize);
-    
+
     /**
      * Performs an operation on each element of type T and calls the given batch procedure
      * everytime the batch size is hit.
@@ -110,6 +130,24 @@ public interface EntityService<T> extends ReadOnlyEntityService<T> {
      * </p>
      *
      * @since 3.4
+     * @param queryName the query name being used
+     * @param procedure the command which will be called with each instance of T
+     * @param batchSize the number of iterations between each flush
+     * @param batchProcedure the procedure which is called every time the batch size is hit
+     * @throws NullPointerException if procedure or batchProcedure is null
+     */
+    void each(String queryName, Procedure<? super T> procedure, int batchSize,
+        Procedure<? super EntityManager> batchProcedure);
+
+    /**
+     * Performs an operation on each element of type T matching the specified query and calls
+     * the given batch procedure everytime the batch size is hit.
+     *
+     * <p>
+     *   Note: {@link Batch} supports several reusable {@link Procedure}s for the third parameter.
+     * </p>
+     *
+     * @since 3.4
      * @param query the query being used
      * @param procedure the command which will be called with each instance of T
      * @param batchSize the number of iterations between each flush
@@ -118,7 +156,7 @@ public interface EntityService<T> extends ReadOnlyEntityService<T> {
      */
     void each(TypedQuery<T> query, Procedure<? super T> procedure, int batchSize,
         Procedure<? super EntityManager> batchProcedure);
-    
+
     /**
      * Deletes an entity.
      * 

@@ -68,6 +68,11 @@ public abstract class AbstractEntityService<T> extends AbstractReadOnlyEntitySer
         each(getTypedQuery(), procedure);
     }
 
+    @Override
+    public void each(String queryName, Procedure<? super T> procedure) {
+        each(prepare(queryName), procedure);
+    }
+
     @Transactional
     @Override
     public void each(TypedQuery<T> query, Procedure<? super T> procedure) {
@@ -84,6 +89,11 @@ public abstract class AbstractEntityService<T> extends AbstractReadOnlyEntitySer
         each(getTypedQuery(), procedure, batchSize);
     }
 
+    @Override
+    public void each(String queryName, Procedure<? super T> procedure, int batchSize) {
+        each(prepare(queryName), procedure, batchSize);
+    }
+
     @Transactional
     @Override
     public void each(TypedQuery<T> query, Procedure<? super T> procedure, int batchSize) {
@@ -94,6 +104,12 @@ public abstract class AbstractEntityService<T> extends AbstractReadOnlyEntitySer
     @Override
     public void each(Procedure<? super T> procedure, int batchSize, Procedure<? super EntityManager> batchProcedure) {
         each(getTypedQuery(), procedure, batchSize, batchProcedure);
+    }
+
+    @Override
+    public void each(String queryName, Procedure<? super T> procedure, int batchSize,
+        Procedure<? super EntityManager> batchProcedure) {
+        each(prepare(queryName), procedure, batchSize, batchProcedure);
     }
 
     @Transactional
