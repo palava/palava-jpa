@@ -81,8 +81,9 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
 
     @Transactional
     @Override
+    @SuppressWarnings("unchecked")
     public T read(String queryName, Object... parameters) {
-        return read(entityManager().createNamedQuery(queryName), parameters);
+        return (T) prepare(entityManager().createNamedQuery(queryName), parameters).getSingleResult();
     }
 
     @Transactional
@@ -106,8 +107,9 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
 
     @Transactional
     @Override
+    @SuppressWarnings("unchecked")
     public List<T> list(String queryName, Object... parameters) {
-        return list(entityManager().createNamedQuery(queryName), parameters);
+        return (List<T>) prepare(entityManager().createNamedQuery(queryName), parameters).getResultList();
     }
 
     /**
@@ -169,14 +171,14 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
     @Override
     @SuppressWarnings("unchecked")
     public <P> P[] projections(String queryName, Object... parameters) {
-        return (P[]) projections(entityManager().createNamedQuery(queryName), parameters);
+        return (P[]) prepare(entityManager().createNamedQuery(queryName), parameters).getSingleResult();
     }
 
     @Transactional
     @Override
     @SuppressWarnings("unchecked")
     public <P> List<P> projectionList(Query query, Object... parameters) {
-        return prepare(query, parameters).getResultList();
+        return (List<P>) prepare(query, parameters).getResultList();
     }
 
     @Override
@@ -186,8 +188,9 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
 
     @Transactional
     @Override
+    @SuppressWarnings("unchecked")
     public <P> List<P> projectionList(String queryName, Object... parameters) {
-        return projectionList(entityManager().createNamedQuery(queryName), parameters);
+        return (List<P>) prepare(entityManager().createNamedQuery(queryName), parameters).getResultList();
     }
 
     @Transactional
@@ -199,8 +202,9 @@ public abstract class AbstractReadOnlyEntityService<T> implements ReadOnlyEntity
 
     @Transactional
     @Override
+    @SuppressWarnings("unchecked")
     public <P> List<P[]> projectionsList(String queryName, Object... parameters) {
-        return projectionsList(entityManager().createNamedQuery(queryName), parameters);
+        return (List<P[]>) prepare(entityManager().createNamedQuery(queryName), parameters).getResultList();
     }
 
     private void doPrepare(Query query, Object[] parameters) {
